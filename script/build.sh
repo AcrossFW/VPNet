@@ -23,8 +23,8 @@ IMAGE="vpnet"
 
 [ "$1" = "run" ] && {
 	exec docker run -ti --rm --privileged --net=host \
-  		-p 22:22 \
   		-p 1723:1723 \
+  		-p 2222:2222 \
   		-p 3128:3128 \
   		-p 8388:8388 \
   		$IMAGE
@@ -32,7 +32,7 @@ IMAGE="vpnet"
 }
 
 [ "$1" = "ssh" ] && {
-	exec ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@localhost
+	exec ssh -p 2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@localhost
 	exit $?
 }
 
