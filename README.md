@@ -15,16 +15,12 @@ We believe that the right of visiting free and open global internet is right tha
 
 ![U.S. Consulate Quotation](https://raw.githubusercontent.com/AcrossFW/vpnet/master/image/internet-access-solution-quotation-from-us-consulate-shanghai.jpg)
 
-> Weibo ScreenShot(original one had been deleted): [U.S. Consulate Weibo](https://raw.githubusercontent.com/AcrossFW/vpnet/master/image/vpn-against-gfw-us-consulate-weibo.jpg)
+* [Weibo ScreenShot(original one had already been deleted)](https://raw.githubusercontent.com/AcrossFW/vpnet/master/image/vpn-against-gfw-us-consulate-weibo.jpg)
 
 ## Goal
 
 The Goal of VPNet is to satisfy those needs in above story, with the following highlights.
 
-1. Professional  
-    1. Stable Connection
-    2. Strong Encryption
-    3. Decentralized
 3. All in One
     5. SSH Tunnel
     3. PPTP
@@ -36,7 +32,10 @@ The Goal of VPNet is to satisfy those needs in above story, with the following h
     1. Build, Ship, Run with Docker
     2. Compatible with any modern Cloud Hosting Provider(VPS)
     3. One Command for All
-5. 
+1. Professional  
+    1. Stable Connection
+    2. Strong Encryption
+    3. Decentralized
 
 Being an Anti-Censorship Technology, VPNet has to try the best to adapt.
 
@@ -49,7 +48,7 @@ Being an Anti-Censorship Technology, VPNet has to try the best to adapt.
 VPNet is extreme easy to deploy by only one command, because it was built & shiped by docker:
 
 ```shell
-$ docker run -d --privileged --net=host \
+# docker run -d --privileged --net=host \
   -p 22:22 \
   -p 1723:1723 \
   -p 3128:3128 \
@@ -73,7 +72,7 @@ TCP: 22
 
 ### 2. PPTP
 
-TCP: 1723
+TCP: 1723  
 IP: GRE
 
 ### 3. Squid
