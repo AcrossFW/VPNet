@@ -1,0 +1,45 @@
+#!/bin/sh
+#
+# VPNet.io - Virtual Private Network Essential Toolbox
+#
+# https://github.com/acrossfw/vpnet
+#
+# pptpd
+#
+
+cat << PPTPD_CONF > /etc/pptpd.conf
+option /etc/ppp/pptpd-options
+pidfile /var/run/pptpd.pid
+localip 192.168.127.1
+remoteip 192.168.127.100-199
+PPTPD_CONF
+
+cat << PPTPD_OPTIONS > /etc/ppp/pptpd-options
+name pptpd
+refuse-pap
+refuse-chap
+refuse-mschap
+require-mschap-v2
+require-mppe-128
+proxyarp
+nodefaultroute
+lock
+nobsdcomp
+novj
+novjccomp
+nologfd
+ms-dns ${DNS:-8.8.8.8}
+ms-dns ${DNS2:-8.8.4.4}
+PPTPD_OPTIONS
+
+cat << CHAP_SECRETS > /etc/ppp/chap-secrets
+$USERNAME	*	$PASSWORD	*
+CHAP_SECRETS
+
+# operation not permited inside docker
+# modprobe nf_conntrack_pptp nf_nat_pptp
+
+pptpd --fg
+
+echo "pptpd exit with error code $?"
+sleep 1
