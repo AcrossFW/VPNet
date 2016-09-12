@@ -49,11 +49,12 @@ Being an Anti-Censorship Technology, VPNet has to try the best to adapt.
 VPNet is extreme easy to deploy by only one command, because it was built & shiped by docker:
 
 ```shell
-$ docker run -d --privileged acrossfw/vpnet \
+$ docker run -d --privileged \
   -p 22:22 \
   -p 1723:1724 \
   -p 3128:3128 \
   -p 8388:8388 \
+  acrossfw/vpnet
 ```
 
 You are set. Cheers!
