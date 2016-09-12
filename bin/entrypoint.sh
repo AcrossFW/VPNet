@@ -36,14 +36,12 @@ iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 # setup ssh keys
 [ "$SSH_AUTHORIZED_KEYS" ] && {
   echo "Writing SSH authorized_keys ..."
-  USER_SSH_HOME=/home/$USERNAME
-  ROOT_SSH_HOME=/root/.ssh
-  [ -d "$USER_SSH_HOME" ] || mkdir $USER_SSH_HOME && chmod 700 $USER_SSH_HOME
-  [ -d "$ROOT_SSH_HOME" ] || mkdir $ROOT_SSH_HOME && chmod 700 $ROOT_SSH_HOME
-  echo $SSH_AUTHORIZED_KEYS >> $USER_SSH_HOME/authorized_keys
-  echo $SSH_AUTHORIZED_KEYS >> $ROOT_SSH_HOME/authorized_keys
-  chmod 600 $USER_SSH_HOME/authorized_keys
-  chmod 600 $ROOT_SSH_HOME/authorized_keys
+  for SSH_DIR in "~$USERNAME/.ssh" "/root/.ssh"; do
+    [ -d "$SSH_DIR" ] || mkdir $SSH_DIR && chmod 700 $SSH_DIR
+    echo $SSH_AUTHORIZED_KEYS >> $SSH_DIR/authorized_keys
+    chmod 600 $SSH_DIR/authorized_keys
+  done
+  chown -R "$USERNAME" "~$USERNAME"
 }
 
 #
