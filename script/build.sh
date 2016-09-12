@@ -16,5 +16,15 @@ IMAGE="vpnet"
 	exit
 }
 
+[ "$1" = "run" ] && {
+	exec docker run -ti --rm --privileged --net=host \
+  		-p 22:22 \
+  		-p 1723:1723 \
+  		-p 3128:3128 \
+  		-p 8388:8388 \
+  		$IMAGE
+	exit $?
+}
+
 exec docker run -ti --rm --privileged $IMAGE $@
 exit $?
