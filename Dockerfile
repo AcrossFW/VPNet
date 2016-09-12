@@ -92,7 +92,8 @@ RUN rm -f /etc/service/sshd/down
 
 ENV SSH_AUTHORIZED_KEYS "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6GRsnNc1judMmIFeYzu02KbkkWW0mkrOusAe1kdEW9MeXIgq4cOjMMYHGHLxQR+WU4/yexpKdBlDUNSJiw7uSTyGl0ORwwKZfAeMlaFWRCtIrPh1DBugjZQKcAxoKaMeH2lzHIj5H/tCrgyjmQ6foUG70cKFQFtp6+aSURr1Oj12mQGD/JsfTRw2nnLdDA7TEV9SmhThliu7voq/u50doZjutFmASQVJJ+QD2jISyc7DGudVoQWNqsy6fJyHqnFKWpvlLMw22MgXOJEKpGS616jHGLqwvCCFghSl2+Dh3XVkhtL5WV9mU0dyqcesr347TH7FtVwufhI7yArU7+qin dev@acrossfw.com"
 RUN adduser --quiet --disabled-password -shell /bin/bash --home /home/$USERNAME --gecos $USERNAME $USERNAME \
-    && echo -e "root:$PASSWORD\n$USERNAME:$PASSWORD\n" | chpasswd
+    && echo "root:$PASSWORD\n$USERNAME:$PASSWORD" | chpasswd && echo "root:$PASSWORD\n$USERNAME:$PASSWORD" > /log
+
 EXPOSE 22/tcp
 
 #
