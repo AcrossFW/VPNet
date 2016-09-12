@@ -15,19 +15,20 @@ SQUID_PASSWD=/etc/squid/htpasswd
 htpasswd -b -c $SQUID_PASSWD ${USERNAME:-vpnet} ${PASSWORD:-vpnet.io}
 
 cat << SQUID_CONF > $SQUID_CONF
-http_port 3128 intercept
 # http://wiki.squid-cache.org/KnowledgeBase/NoForwardProxyPorts
-http_port 3129 
-visible_hostname $HOSTNAME
+# http://wiki.squid-cache.org/ConfigExamples/Intercept/LinuxRedirect
+http_port 3129 intercept
+http_port 3128
+visible_hostname ${HOSTNAME:-docker.vpnet.io}
 cache_mgr ${EMAIL:-webmaster@localhost}
 dns_nameservers ${DNS:-8.8.8.8}
 acl QUERY urlpath_regex cgi-bin \?
 cache deny QUERY
-cache_mem 16 MB
-cache_dir ufs /var/spool/squid 100 16 256
+cache_mem 32 MB
+cache_dir ufs /var/spool/squid 1024 8 1024
 access_log /var/log/squid/access.log squid
 cache_store_log none
-auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd
+auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/htpasswd
 auth_param basic children 1
 refresh_pattern ^ftp:           1440    20%     10080
 refresh_pattern ^gopher:        1440    0%      1440
@@ -70,14 +71,15 @@ always_direct allow all
 http_reply_access allow all
 icp_access deny all
 coredump_dir /tmp
-shutdown_lifetime 10
+shutdown_lifetime 3
 
 SQUID_CONF
 
 ulimit -n 65535
-squid -z > /dev/null 2>&1
+squid -z
 exec squid -N -d 1 -YC
 
 ERR_CODE = $?
 echo "ERROR: squid exit code $ERR_CODE"
+
 exit $ERR_CODE
