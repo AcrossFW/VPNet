@@ -25,7 +25,7 @@ cache_mem 16 MB
 cache_dir ufs /var/spool/squid 100 16 256
 access_log /var/log/squid/access.log squid
 cache_store_log none
-auth_param basic program /usr/lib/squid/ncsa_auth /etc/squid/passwd
+auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd
 auth_param basic children 1
 refresh_pattern ^ftp:           1440    20%     10080
 refresh_pattern ^gopher:        1440    0%      1440
@@ -33,8 +33,8 @@ refresh_pattern .               0       20%     4320
 acl ncsa_users proxy_auth REQUIRED
 #acl password proxy_auth REQUIRED
 #acl all src 0.0.0.0/0.0.0.0
-acl manager proto cache_object
-acl localhost src 127.0.0.1/32
+#acl manager proto cache_object
+#acl localhost src 127.0.0.1/32
 acl privatenet8 src 10.0.0.0/8
 acl privatenet12 src 172.16.0.0/12
 acl privatenet16 src 192.168.0.0/16
@@ -73,6 +73,7 @@ shutdown_lifetime 10
 SQUID_CONF
 
 ulimit -n 65535
+squid -z
 exec squid -N -d 1 -YC
 
 ERR_CODE = $?

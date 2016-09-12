@@ -13,9 +13,9 @@ We believe that the right of visiting free and open global internet is right tha
 > To: Prospective Bidders  
 > Subject: Request for Quotation for Internet access solution  
 
-![U.S. Consulate Weibo](https://raw.githubusercontent.com/AcrossFW/vpnet/master/image/vpn-against-gfw-us-consulate-weibo.jpg)
-
 ![U.S. Consulate Quotation](https://raw.githubusercontent.com/AcrossFW/vpnet/master/image/internet-access-solution-quotation-from-us-consulate-shanghai.jpg)
+
+> Weibo ScreenShot(original one had been deleted): [U.S. Consulate Weibo](https://raw.githubusercontent.com/AcrossFW/vpnet/master/image/vpn-against-gfw-us-consulate-weibo.jpg)
 
 ## Goal
 
@@ -23,7 +23,7 @@ The Goal of VPNet is to satisfy those needs in above story, with the following h
 
 1. Professional  
     1. Stable Connection
-    2. Strong Cryption
+    2. Strong Encryption
     3. Decentralized
 3. All in One
     5. SSH Tunnel
@@ -33,10 +33,9 @@ The Goal of VPNet is to satisfy those needs in above story, with the following h
     2. OpenVPN
     4. IPsec
 2. Extreme Easy to Setup
-    1. Pick a VPS
-    2. Run via Docker
-    3. Use it
-    4. 
+    1. Build, Ship, Run with Docker
+    2. Compatible with any modern Cloud Hosting Provider(VPS)
+    3. One Command for All
 5. 
 
 Being an Anti-Censorship Technology, VPNet has to try the best to adapt.
@@ -65,15 +64,27 @@ You are set. Cheers!
 
 ## Out-of-the-box Features
 
+> Sort by port number
+
 ### 1. SSH
+
+TCP: 22
 
 ### 2. PPTP
 
+TCP: 1724
+IP: GRE
+
 ### 3. Squid
+
+TCP: 3128
 
 ### 4. ShadowSocks
 
+TCP: 8388
+
 ### 5. IPsec
+
 
 ### 6. OpenVPN
 
@@ -84,9 +95,9 @@ You are set. Cheers!
 
 The follow requirements is just for suggestion, because VPNet can run in anywhere which has docker installed. If you already have a server, use it as well.
 
-1. Location: HongKong / Koera / Japan / Singapore
+1. Location: Asia(HongKong/Korea/Japan/Singapore)
 1. Operation System: 64-bit Debian 8 Jessie
-1. CPU / Ram / Disk: Smallest(Cheapest)
+1. CPU/Ram/Disk: Smallest(Cheapest)
 
 ### 2. Service Provider
 
@@ -98,11 +109,12 @@ The follow requirements is just for suggestion, because VPNet can run in anywher
 Here's how to install docker in 64-bit Debian 8.
 
 ```shell
-apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
-apt-get update && apt-get install docker-engine
-service enable docker
-docker run hello-world
+# apt-get update && apt-get install apt-transport-https
+# apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+# echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
+# apt-get update && apt-get install docker-engine
+# service enable docker
+# docker run hello-world
 ```
 
 If you want to install docker for other linux distribution, documents can be found on docker.com at [Install Docker Engine](https://docs.docker.com/engine/installation/#installation).
