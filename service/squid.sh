@@ -75,8 +75,9 @@ shutdown_lifetime 3
 
 SQUID_CONF
 
+[ -e /var/spool/squid/00 ] || squid -Nz
+
 ulimit -n 65535
-squid -z
 exec squid -N -d 1 -YC
 
 ERR_CODE = $?
