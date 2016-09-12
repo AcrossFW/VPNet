@@ -1,6 +1,6 @@
 # VPNet
---------------------------------------
-VPNet(Very Powerful Network Entrypting Toolbox) is a modern, open source, strong encryption and easy to use docker image for bypassing the censorship circumvention systems, which helps people gain access to the global internet free of censorship, without knowledge of what is being blocked or the underlying technical.
+
+VPNet(Very Powerful Network Encryption Toolbox) is a modern, open source, strong encryption and easy to use docker image for bypassing the censorship circumvention systems, which helps people gain access to the global internet free of censorship, without knowledge of what is being blocked or the underlying technical.
 
 We believe that the right of visiting free and open global internet is right that all people should enjoy – both technic and the non-technic people.
 
@@ -13,7 +13,9 @@ We believe that the right of visiting free and open global internet is right tha
 > To: Prospective Bidders  
 > Subject: Request for Quotation for Internet access solution  
 
+![U.S. Consulate Weibo](https://raw.githubusercontent.com/AcrossFW/vpnet/master/image/vpn-against-gfw-us-consulate-weibo.jpg)
 
+![U.S. Consulate Quotation](https://raw.githubusercontent.com/AcrossFW/vpnet/master/image/internet-access-solution-quotation-from-us-consulate-shanghai.jpg)
 
 ## Goal
 
@@ -37,7 +39,7 @@ The Goal of VPNet is to satisfy those needs in above story, with the following h
     4. 
 5. 
 
-Being an Anti-Censorship Technology, VPNet will try the best to adapt.
+Being an Anti-Censorship Technology, VPNet has to try the best to adapt.
 
 > “Every time censors try a new technique, the tool developers adapt, keeping thousand of users connected to the global internet.”  
 >  
@@ -57,7 +59,8 @@ $ docker run -d --privileged acrossfw/vpnet \
 
 You are set. Cheers!
 
-### Usage
+### Defaults
+
 
 
 ## Out-of-the-box Features
