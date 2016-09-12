@@ -15,7 +15,9 @@ SQUID_PASSWD=/etc/squid/htpasswd
 htpasswd -b -c $SQUID_PASSWD ${USERNAME:-vpnet} ${PASSWORD:-vpnet.io}
 
 cat << SQUID_CONF > $SQUID_CONF
-http_port 3128 transparent
+http_port 3128 intercept
+# http://wiki.squid-cache.org/KnowledgeBase/NoForwardProxyPorts
+http_port 3129 
 visible_hostname $HOSTNAME
 cache_mgr ${EMAIL:-webmaster@localhost}
 dns_nameservers ${DNS:-8.8.8.8}
@@ -73,7 +75,7 @@ shutdown_lifetime 10
 SQUID_CONF
 
 ulimit -n 65535
-squid -z
+squid -z > /dev/null 2>&1
 exec squid -N -d 1 -YC
 
 ERR_CODE = $?
