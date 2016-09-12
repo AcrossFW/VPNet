@@ -102,8 +102,10 @@ The follow requirements is just for suggestion, because VPNet can run in anywher
 
 ### 2. Service Provider
 
-1. [Linode](https://www.linode.com/)
-1. [DigitalOcean](https://www.digitalocean.com/)
+1. [Vultr](http://www.vultr.com/?ref=6981349) $5/mo, Tokyo Japan, with [$100 COUPON](http://vultrcouponcode.com/)
+1. [DigitalOcean](https://m.do.co/c/9304d9484557) $5/mo, new register user will get $10 free credit
+1. [Linode](https://www.linode.com/?r=564ab299ba1b198e0eb12fe0a50d559accaa2300) $10/mo, Tokyo Japan & Singapore, with [$20 COUPON](https://www.google.com/#q=linode+promotion+code+coupon)
+1. [Amazon Web Service](https://aws.amazon.com/free/) AWS Free Tier includes services for Instance Type _T1.micro_ with a free tier available for 12 months.
 
 ## Docker Installation
 
