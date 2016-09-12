@@ -8,12 +8,17 @@ IMAGE="vpnet"
 
 [ "$1" = "build" -o "$1" = "" ] && {
 	docker build -t $IMAGE .
-	[ "$?" = 0 ] && {
+	ERR_CODE=$?
+	[ "$ERR_CODE" = 0 ] && {
 		echo '############################################'
 		echo "Build succeed for image $IMAGE"
 		echo '############################################'
+		exit
 	}
-	exit
+	echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+	echo "ERROR: Build FAIL with exit code $ERR_CODE"
+	echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+	exit $ERR_CODE
 }
 
 [ "$1" = "run" ] && {
@@ -23,6 +28,11 @@ IMAGE="vpnet"
   		-p 3128:3128 \
   		-p 8388:8388 \
   		$IMAGE
+	exit $?
+}
+
+[ "$1" = "ssh" ] && {
+	exec ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@localhost
 	exit $?
 }
 
