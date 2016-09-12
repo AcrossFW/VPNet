@@ -53,7 +53,7 @@ if [ "$1" = "start" ]; then
   # CMD ["/sbin/my_init"]
   
   echo -n "Getting my IP... "
-  curl ifconfig.io
+  curl -sS ifconfig.io
   
   exec my_init
   ERR_CODE=$?
