@@ -8,7 +8,7 @@
 CMD=ss-server
 exec $CMD -s 0.0.0.0 \
 	-p 8388 \
-	-k ${PASSWORD:-$(hostname)} \
+	-k "${PASSWORD:-$(hostname)}" \
 	-m ${SHADOWSOCKS_ENCRYPT_METHOD:-aes-256-cfb} \
 	-t 300 \
 	--fast-open \
