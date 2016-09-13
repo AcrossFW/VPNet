@@ -21,10 +21,11 @@ IMAGE="vpnet"
 	exit $ERR_CODE
 }
 
+NET_MODE=host
 [ "$1" = "run" ] && {
-	exec docker run -ti --rm --privileged --net=host \
+	exec docker run -ti --rm --privileged --net=$NET_MODE \
+  		-p   22:2222 \
   		-p 1723:1723 \
-  		-p 2222:2222 \
   		-p 3128:3128 \
   		-p 8388:8388 \
   		$IMAGE
@@ -32,7 +33,10 @@ IMAGE="vpnet"
 }
 
 [ "$1" = "ssh" ] && {
-	exec ssh -p 2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@localhost
+	[ "$NET_MODE" = "host" ] 	&& HOST=localhost
+	[ "$NET_MODE" = "bridge" ] && HOST=$(docker ps | grep vpnet | awk '{print $1}' | xargs docker inspect | grep IPAddress | grep 172 | awk -F\" '{print $4}' | head -1)
+	echo "SSHing to $HOST in $NET_MODE mode ... "
+	exec ssh -q -p 2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "root@$HOST"
 	exit $?
 }
 

@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# VPNet.io - Virtual Private Network Essential Toolbox
+#
+# https://github.com/acrossfw/vpnet
+#
+# SSH
+#
+
+# http://kvz.io/blog/2013/11/21/bash-best-practices/
+set -o errexit
+set -o pipefail
+set -o nounset
+# set -o xtrace
+
+ADD_USER_HOME="/home/$ADMIN_NAME"
+ADD_USER_NAME="$ADMIN_NAME"
+ADD_USER_PASS="$ADMIN_PASS"
+
+echo "SSH: Create user home if not exist ... "
+[[ -d "$ADD_USER_HOME" ]] || {
+  adduser --quiet --disabled-password -shell /bin/bash --home "$ADD_USER_HOME" --gecos "$ADD_USER_NAME" "$USER_NAME"
+}
+echo "SSH: Reset password every time ... "
+echo "$ADD_USER_NAME:$ADD_USER_PASS" | chpasswd
+
+# store ssh authorized key(if set)
+[[ -n "$SSH_AUTHORIZED_KEYS" ]] && {
+  echo "SSH: Writing authorized_keys for root ..."
+  SSH_DIR="/root/.ssh"
+  [ -d "$SSH_DIR" ] || mkdir $SSH_DIR && chmod 700 $SSH_DIR
+  echo $SSH_AUTHORIZED_KEYS >> $SSH_DIR/authorized_keys
+  chmod 600 $SSH_DIR/authorized_keys
+}
+
+N=0
+while [[ true ]]; do
+  ((N++))
+  echo "SSH: Heartbeat #$N... "
+  sleep 3600
+done

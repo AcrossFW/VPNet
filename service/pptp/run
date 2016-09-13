@@ -33,7 +33,7 @@ ms-dns ${DNS2:-8.8.4.4}
 PPTPD_OPTIONS
 
 cat << CHAP_SECRETS > /etc/ppp/chap-secrets
-$USERNAME	*	$PASSWORD	*
+$ADMIN_NAME	*	$ADMIN_PASS	*
 CHAP_SECRETS
 
 # operation not permited inside docker

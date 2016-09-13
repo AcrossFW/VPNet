@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+#
+# VPNet.io - Virtual Private Network Essential Toolbox
+#
+# https://github.com/acrossfw/vpnet
+#
+# Inspired by https://github.com/gaomd/docker-ikev2-vpn-server
+#
+
+source /acrossfw/vpnet-module.sh
+# set all the magic
+vpnet::init_bash ${BASH_SOURCE[0]}
+
+main() {
+  vpnet::init_config /etc/ipsec.conf
+  vpnet::init_config /etc/ndppd.conf
+  vpnet::init_config /etc/strongswan.conf
+  
+  ipsec::init_network
+  ipsec::run
+}
+
+ipsec::init_network() {
+  iptables -A INPUT -p esp -j ACCEPT
+  iptables -A INPUT -p ah -j ACCEPT
+
+  # https://wiki.strongswan.org/projects/strongswan/wiki/ForwardingAndSplitTunneling
+  # Continue reading: https://wiki.strongswan.org/projects/strongswan/wiki/VirtualIP
+  # iptables -t nat -A POSTROUTING -s 10.8.0.0/16 -o eth0 -m policy --dir out --pol ipsec -j ACCEPT
+  # ip6tables -t nat -A POSTROUTING -s 2a00:1450:400c:c05::/64 -o eth0 -m policy --dir out --pol ipsec -j ACCEPT
+}
+
+ipsec::run() {
+  [ -f /etc/ipsec.secrets ] || {
+   # hotfix for openssl `unable to write 'random state'` stderr
+    SHARED_SECRET="123$(openssl rand -base64 32 2>/dev/null)"
+    echo ": PSK \"${SHARED_SECRET}\"" > /etc/ipsec.secrets
+  }
+  
+  # hotfix for https://github.com/gaomd/docker-ikev2-vpn-server/issues/7
+  rm -f /var/run/starter.charon.pid
+  
+  service ndppd start
+  # http://wiki.loopop.net/doku.php?id=server:vpn:strongswanonopenvz
+  exec /usr/sbin/ipsec start --nofork
+  
+  err_code=$?
+  echo "ERROR: ipsec::run error code $err_code"
+  sleep 1
+  exit $err_code
+}
+
+main "$@"

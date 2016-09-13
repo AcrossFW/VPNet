@@ -12,7 +12,7 @@
 SQUID_CONF=/etc/squid/squid.conf
 SQUID_PASSWD=/etc/squid/htpasswd
 
-htpasswd -b -c $SQUID_PASSWD ${USERNAME:-vpnet} ${PASSWORD:-vpnet.io}
+htpasswd -b -c $SQUID_PASSWD ${ADMIN_NAME:-vpnet} ${ADMIN_PASS:-vpnet.io}
 
 cat << SQUID_CONF > $SQUID_CONF
 # http://wiki.squid-cache.org/KnowledgeBase/NoForwardProxyPorts

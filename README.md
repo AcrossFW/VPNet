@@ -83,11 +83,12 @@ TCP: 3128
 
 TCP: 8388
 
-### 5. IPsec
+### 5. IKEv2/IPsec
 
 
 ### 6. OpenVPN
 
+### 7. SSTP
 
 ## Cloud Hosting
 
@@ -101,10 +102,30 @@ The follow requirements is just for suggestion, because VPNet can run in anywher
 
 ### 2. Service Provider
 
+#### :star::star::star:
+
+Tested without any Problem, with best price
+
+1. [Arukas](https://arukas.io) FREE! Japan! Deploy apps right out of the box
 1. [Vultr](http://www.vultr.com/?ref=6981349) $5/mo, Tokyo Japan, with [$100 COUPON](http://vultrcouponcode.com/)
 1. [DigitalOcean](https://m.do.co/c/9304d9484557) $5/mo, new register user will get $10 free credit
 1. [Linode](https://www.linode.com/?r=564ab299ba1b198e0eb12fe0a50d559accaa2300) $10/mo, Tokyo Japan & Singapore, with [$20 COUPON](https://www.google.com/#q=linode+promotion+code+coupon)
 1. [Amazon Web Service](https://aws.amazon.com/free/) AWS Free Tier includes services for Instance Type _T1.micro_ with a free tier available for 12 months.
+
+#### :star:
+
+Can be paid by RMB, a little expensive.
+
+1 [阿里云](https://cn.aliyun.com/price/product#/ecs/detail)
+1 [腾讯云](https://www.qcloud.com/product/cvm.html)
+
+
+#### :-1:
+
+Leak of some function
+
+1. [Google Compute Engine](https://cloud.google.com) PPTP not work, because [IP GRE PROTOCOL not supported](https://code.google.com/p/google-compute-engine/issues/detail?id=66)
+
 
 ## Docker Installation
 
@@ -121,10 +142,16 @@ Here's how to install docker in 64-bit Debian 8.
 
 If you want to install docker for other linux distribution, documents can be found on docker.com at [Install Docker Engine](https://docs.docker.com/engine/installation/#installation).
 
+## Coding Style
+
+* [Shell Style Guide from Google](https://google.github.io/styleguide/shell.xml) - Use common sense and BE CONSISTENT.
+
 ## Reference
 
-* [Getting everything right: baseimage-docker](phusion.github.io/baseimage-docker/)
+* [Getting everything right: baseimage-docker](https://phusion.github.io/baseimage-docker/)
 * [Templating with Linux in a Shell Script](http://serverfault.com/a/699377/276381)
+* [Best Practices for Writing Bash Script](http://kvz.io/blog/2013/11/21/bash-best-practices/)
+* [Returning Values from Bash Functions](http://www.linuxjournal.com/content/return-values-bash-functions)
 
 ## See Also
 
