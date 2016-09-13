@@ -28,10 +28,11 @@ main() {
 ssh::init_authorized_keys() {
   [[ -n "$SSH_AUTHORIZED_KEYS" ]] && {
     echo "SSH: Writing authorized_keys for root ..."
-    DOT_SSH_DIR="/root/.ssh"
-    [ -d "$DOT_SSH_DIR" ] || mkdir $DOT_SSH_DIR && chmod 700 $DOT_SSH_DIR
-    echo $SSH_AUTHORIZED_KEYS >> $DOT_SSH_DIR/authorized_keys
-    chmod 600 $DOT_SSH_DIR/authorized_keys
+    for DOT_SSH_DIR in "/home/$ADMIN_NAME/.ssh" "/root/.ssh"; do
+      [ -d "$DOT_SSH_DIR" ] || mkdir $DOT_SSH_DIR && chmod 700 $DOT_SSH_DIR
+      echo $SSH_AUTHORIZED_KEYS >> $DOT_SSH_DIR/authorized_keys
+      chmod 600 $DOT_SSH_DIR/authorized_keys
+    done
   }
 }
 

@@ -19,14 +19,22 @@ MAINTAINER AcrossFW <dev@acrossfw.com>
 
 #	module-init-tools \ operation not permitted inside docker
 RUN apt-get update -qq && apt-get -qqy install \
-	apt-utils \
-	curl \
-	iperf \
-	iptables \
-	net-tools \
-	netcat \
-	tcpdump \
-	tinc
+    	apt-utils \
+    	curl \
+    	iperf \
+    	iptables \
+    	net-tools \
+    	netcat \
+    	tcpdump \
+    	tinc
+
+ENV BATS_VERSION 0.4.0
+RUN curl -s -o "/tmp/v${BATS_VERSION}.tar.gz" -L \
+      "https://github.com/sstephenson/bats/archive/v${BATS_VERSION}.tar.gz" \
+    && tar -xzf "/tmp/v${BATS_VERSION}.tar.gz" -C /tmp/ \
+    && bash "/tmp/bats-${BATS_VERSION}/install.sh" /usr/local \
+    \
+    && rm -rf /tmp/*
 
 ENV ADMIN_NAME vpnet
 ENV ADMIN_PASS vpnet.io

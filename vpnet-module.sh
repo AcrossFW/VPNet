@@ -107,6 +107,38 @@ vpnet::init_network() {
   # XXX no need ? iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 }
 
+vpnet::get_user_home() {
+  local n=${#@}
+  local user_name
+  local user_home
+  local __resultvar
+  
+  case "$n" in
+    1)
+      user_name=$1
+      user_home=$(eval echo ~${user_name})
+      echo $user_home
+      ;;
+    2)  # http://www.linuxjournal.com/content/return-values-bash-functions
+      user_name=$1
+      __resultvar=$2
+      user_home=$(eval echo ~${user_name})
+      # echo $__resultvar="'$user_home'"
+      eval $__resultvar="'$user_home'"
+      ;;
+    *)
+      return -1
+      ;;
+  esac
+  
+  # non-exist user will not resolve and keep the origin string, which has a leading '~'
+  if [[ "$user_home" =~ ^~ ]]; then
+    return -1
+  else
+    return 0
+  fi
+}
+
 #
 # Process Args
 #
