@@ -9,7 +9,7 @@
 
 source /acrossfw/vpnet-module.sh
 # set all the magic
-vpnet::init_bash ${BASH_SOURCE[0]}
+vpnet::init_bash "${BASH_SOURCE[0]}"
 
 main() {
   vpnet::init_config /etc/ipsec.conf

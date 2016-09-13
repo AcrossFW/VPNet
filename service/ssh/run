@@ -7,13 +7,13 @@
 # SSH
 #
 source /acrossfw/vpnet-module.sh
-vpnet::init_bash ${BASH_SOURCE[0]} # set all the magic
+vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
 main() {
-  local arg1=${1:-}
+  # local arg1=${1:-}
 
-  ssh::init_authorized_keys
   ssh::init_admin
+  ssh::init_authorized_keys
 #  ssh::init_users
 
   n=0
@@ -27,11 +27,18 @@ main() {
 # store ssh authorized key(if set)
 ssh::init_authorized_keys() {
   [[ -n "$SSH_AUTHORIZED_KEYS" ]] && {
-    echo "SSH: Writing authorized_keys for root ..."
-    for DOT_SSH_DIR in "/home/$ADMIN_NAME/.ssh" "/root/.ssh"; do
-      [ -d "$DOT_SSH_DIR" ] || mkdir $DOT_SSH_DIR && chmod 700 $DOT_SSH_DIR
-      echo $SSH_AUTHORIZED_KEYS >> $DOT_SSH_DIR/authorized_keys
-      chmod 600 $DOT_SSH_DIR/authorized_keys
+    echo "ssh:init_authorized_keys Writing authorized_keys for root & $ADMIN_NAME ..."
+    local user_name
+    local user_home
+    local dot_ssh_dir
+    for user_name in 'root' "$ADMIN_NAME"; do
+      vpnet::get_user_home "$user_name" user_home #|| true # fail safe
+      dot_ssh_dir="$user_home/.ssh/"
+      [ -d "$dot_ssh_dir" ] || mkdir "$dot_ssh_dir"
+      echo "$SSH_AUTHORIZED_KEYS" >> "${dot_ssh_dir}authorized_keys"
+      chmod 700 "${dot_ssh_dir}"
+      chmod 600 "${dot_ssh_dir}authorized_keys"
+      chown -R "$user_name" "$dot_ssh_dir"
     done
   }
 }
@@ -41,7 +48,7 @@ ssh::init_admin() {
   ADD_USER_NAME="$ADMIN_NAME"
   ADD_USER_PASS="$ADMIN_PASS"
   
-  echo "SSH: Create user home if not exist ... "
+  echo "ssh::init_admin Create user home if not exist ... "
   [[ -d "$ADD_USER_HOME" ]] || {
     adduser --quiet --disabled-password -shell /bin/bash --home "$ADD_USER_HOME" --gecos "$ADD_USER_NAME" "$ADD_USER_NAME"
   }
