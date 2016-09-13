@@ -25,6 +25,7 @@ RUN apt-get update -qq && apt-get -qqy install \
     	iptables \
     	net-tools \
     	netcat \
+    	shellcheck \
     	tcpdump \
     	tinc
 
@@ -51,7 +52,6 @@ ENTRYPOINT [ "/acrossfw/bin/entrypoint.sh" ]
 CMD [ "start" ]
 
 WORKDIR $ACROSSFW_HOME
-COPY . .
 RUN ln -s /etc/service /service \
   && ln -s ${ACROSSFW_HOME}/service/vpnet /service/vpnet
 
@@ -126,6 +126,9 @@ EXPOSE 8388/tcp 8388/udp
 # END - VPNet.io
 #
 #
+
+# put COPY . . the end of Dockerfile for speedup build time by maximum cache usage
+COPY . .
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
