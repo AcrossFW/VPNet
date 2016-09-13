@@ -9,7 +9,7 @@ source /acrossfw/vpnet-module.sh
 vpnet::init_bash ${BASH_SOURCE[0]} # set all the magic
 
 main() {
-  local arg1=$1
+  local arg1=${1:-}
   
   echo
   echo "Starting VPNet Docker ..."

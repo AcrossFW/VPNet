@@ -39,7 +39,9 @@ CHAP_SECRETS
 # operation not permited inside docker
 # modprobe nf_conntrack_pptp nf_nat_pptp
 
-pptpd --fg
+exec pptpd --fg
 
-echo "pptpd exit with error code $?"
+error_code=$?
+echo "exec pptpd exit with error code $error_code"
 sleep 1
+exit $error_code
