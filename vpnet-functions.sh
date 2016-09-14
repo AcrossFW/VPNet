@@ -5,11 +5,11 @@
 # https://github.com/acrossfw/vpnet
 #
 
-#
-# Bash3 Boilerplate. Copyright (c) 2014, kvz.io
-# http://kvz.io/blog/2013/11/21/bash-best-practices/
-#
 vpnet::init_bash() {
+  #
+  # Bash3 Boilerplate. Copyright (c) 2014, kvz.io
+  # http://kvz.io/blog/2013/11/21/bash-best-practices/
+  #
   set -o errexit
   set -o pipefail
   set -o nounset
@@ -22,10 +22,10 @@ vpnet::init_bash() {
   fi
 
   # Set magic variables for current file & dir
-  declare -x __dir="$(cd "$(dirname "$source}")" && pwd)"
-  declare -x __file="${__dir}/$(basename "${source}")"
-  declare -x __base="$(basename "${__file}" .sh)"
-  declare -x __root="/acrossfw" # "$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
+  declare -gx __dir="$(cd "$(dirname "$source}")" && pwd)"
+  declare -gx __file="${__dir}/$(basename "${source}")"
+  declare -gx __base="$(basename "${__file}" .sh)"
+  declare -gx __root="${ACROSSFW_HOME:-/acrossfw}" # "$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
 }
 
 vpnet::init_config() {
