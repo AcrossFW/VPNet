@@ -5,7 +5,7 @@
 # https://github.com/acrossfw/vpnet
 #
 
-source /acrossfw/vpnet-module.sh
+source /acrossfw/vpnet-functions.sh
 vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
 main() {
@@ -15,6 +15,9 @@ main() {
   echo "Starting VPNet Docker ..."
   echo
   
+  echo -n "Getting my IP ... "
+  curl -sS ifconfig.io
+
   vpnet::check_env
   
   vpnet::init_system
@@ -25,8 +28,6 @@ main() {
     start)
       # Use baseimage-docker's init system.
       # CMD ["/sbin/my_init"]
-      echo -n "Getting my IP... "
-      curl -sS ifconfig.io
       
       exec my_init
       
@@ -35,20 +36,39 @@ main() {
       sleep 1
       exit $err_code
       ;;
+      
     test)
-      bats __root/test/*.bats
-      if [ $? -eq 0 ]; then
-        echo "Test PASS"
-      else
+      bats_cmd="bats ${__root}/test/*.bats"
+      
+      echo
+      echo "$bats_cmd"
+      echo
+      echo "Start testing ... "
+      echo
+      
+      $bats_cmd
+      
+      if [ $? != 0 ]; then
+        echo
         echo "ERROR: Test FAIL"
+        echo
+        
+        exit -1
       fi
-      exit -1
+      
+      echo
+      echo "Test PASS"
+      echo
+      
+      exit 0
       ;;
+      
     bash|sh|shell)
       echo "Creating shell..."
       exec /bin/bash -s
       exit $?
       ;;
+      
     *)
       echo "ERROR: Unsupport arg $arg1"
       exit -1
