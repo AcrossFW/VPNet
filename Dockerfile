@@ -56,7 +56,8 @@ WORKDIR $ACROSSFW_HOME
 RUN ln -s /etc/service /service \
   && ln -s ${ACROSSFW_HOME}/service/vpnet /service/vpnet \
   && echo 'export WANIP=`curl -Ss ifconfig.io`' >> /etc/profile \
-  && echo '[[ "$PS1" =~ WANIP ]] || PS1=${PS1/\\h/\\h(\$WANIP)}' >> /etc/skel/.bashrc
+  && echo '[[ "$PS1" =~ WANIP ]] || PS1=${PS1//@\\\\h/@\\\\h(\$WANIP)}' >> /root/.bashrc \
+  && echo '[[ "$PS1" =~ WANIP ]] || PS1=${PS1//@\\\\h/@\\\\h(\$WANIP)}' >> /etc/skel/.bashrc
 
 #
 # Node.JS
