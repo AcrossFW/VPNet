@@ -13,11 +13,11 @@ main() {
   
   source "$ACROSSFW_HOME/ENV"
   echo
-  echo "Starting VPNet Docker ..."
+  echo "Starting VPNet Docker v$(head -1 ${__root}/VERSION) #${VERSION_HASH}"
   echo
   echo "  https://github.com/acrossfw/vpnet"
   echo
-  echo "  Version $(head -1 ${__root}/VERSION)"
+  echo "  "
   echo "  Build by $BUILD_HOST($BUILD_IP) on $BUILD_DATE"
   echo "  Run as $(hostname -f) with IP $(curl -sS ifconfig.io)"
   echo 
