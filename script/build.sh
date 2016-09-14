@@ -86,10 +86,10 @@ CMD
 		;;
 	
 	lint)
-		local ret_code
-		for file in $(find . -type f -name "*.sh" -o -name "run"); do
-			shellcheck --exclude SC2093,SC2078 "$file" || $ret_code=$?
-			bash -n "$file" || $ret_code=$?
+		file_list=$(find . -type f -name "*.sh" -o -name "run")
+		for file in $file_list; do
+			shellcheck --exclude SC2093,SC2078 "$file" || ret_code=$?
+			bash -n "$file" || ret_code=$?
 		done
 		exit $ret_code
 		;;
