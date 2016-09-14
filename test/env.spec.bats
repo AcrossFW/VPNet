@@ -26,4 +26,5 @@ set +o nounset # bats need this to run correctly
   
   [[ "$BUILD_DATE" ]]
   [[ "$BUILD_HOST" ]]
+  [[ "$BUILD_IP" ]]
 }

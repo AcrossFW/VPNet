@@ -127,7 +127,7 @@ Pay by RMB, a little expensive.
 1. [腾讯云](https://www.qcloud.com/product/cvm.html)
 
 
-#### :+1::star::-1: Buggy
+#### :star::-1: Buggy
 
 Leak of some function
 

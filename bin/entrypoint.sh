@@ -15,8 +15,11 @@ main() {
   echo
   echo "Starting VPNet Docker ..."
   echo
-  echo "  Build ${BUILD_VERSION} by $BUILD_HOST on $BUILD_DATE"
-  echo "  Run on $(hostname) with IP $(curl -sS ifconfig.io)"
+  echo "  https://github.com/acrossfw/vpnet"
+  echo
+  echo "  Version $(head -1 ${__root}/VERSION)"
+  echo "  Build by $BUILD_HOST($BUILD_IP) on $BUILD_DATE"
+  echo "  Run as $(hostname -f) with IP $(curl -sS ifconfig.io)"
   echo 
 
   vpnet::check_env
