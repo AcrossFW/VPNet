@@ -124,8 +124,8 @@ vpnet::get_user_home() {
       __user_name=$1
       __resultvar=$2
       __user_home=$(eval echo ~"${__user_name}")
-      # echo $__resultvar="'$__user_home'"
-      eval "$__resultvar='$__user_home'"
+      # declare global variable http://stackoverflow.com/q/9871458/1123955
+      eval "declare -gx $__resultvar='$__user_home'"
       ;;
     *)
       return -1
