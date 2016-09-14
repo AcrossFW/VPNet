@@ -106,7 +106,7 @@ The follow requirements is just for suggestion, because VPNet can run in anywher
 
 ### 2. Service Provider
 
-#### Great :star::star::star::star::star:
+#### :star::star::star::star::star: Great
 
 Tested without any Problem, with best price
 
@@ -114,12 +114,12 @@ Tested without any Problem, with best price
 1. [Linode](https://www.linode.com/?r=564ab299ba1b198e0eb12fe0a50d559accaa2300) $10/mo, Tokyo Japan & Singapore, with [$20 COUPON](https://www.google.com/#q=linode+promotion+code+coupon)
 1. [Vultr](http://www.vultr.com/?ref=6981349) $5/mo, Tokyo Japan, with [$100 COUPON](http://vultrcouponcode.com/)
 
-#### Good :star::star::star::star:
+#### :star::star::star::star: Good
 
 1. [Amazon Web Service](https://aws.amazon.com/free/) AWS Free Tier includes services for Instance Type _T1.micro_ with a free tier available for 12 months.
 1. [Arukas](https://arukas.io) FREE! Japan! Deploy apps right out of the box
 
-#### So So :star::star::star:
+#### :star::star::star: So So
 
 Pay by RMB, a little expensive.
 
@@ -127,12 +127,15 @@ Pay by RMB, a little expensive.
 1. [腾讯云](https://www.qcloud.com/product/cvm.html)
 
 
-#### Buggy :star::-1:
+#### :+1::star::-1: Buggy
 
 Leak of some function
 
 1. [Google Compute Engine](https://cloud.google.com) PPTP not work, because [IP GRE PROTOCOL not supported](https://code.google.com/p/google-compute-engine/issues/detail?id=66)
 
+#### :-1: Not Work
+
+1. TBL
 
 ## Docker Installation
 
