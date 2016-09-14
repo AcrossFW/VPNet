@@ -7,7 +7,7 @@
 docker_image="vpnet"
 net_mode=bridge
 
-arg1=${1:-}
+arg1=${1:-build}
 
 case "$arg1" in
 	build|'')
@@ -86,8 +86,12 @@ CMD
 		;;
 	
 	lint)
-		exec find . -type f -name "*.sh" -o -name "run" | xargs shellcheck --exclude SC2093,SC2078
-		exit $?
+		local ret_code
+		for file in $(find . -type f -name "*.sh" -o -name "run"); do
+			shellcheck --exclude SC2093,SC2078 "$file" || $ret_code=$?
+			bash -n "$file" || $ret_code=$?
+		done
+		exit $ret_code
 		;;
 		
 	*)
