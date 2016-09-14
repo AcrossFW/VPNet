@@ -22,14 +22,12 @@ vpnet::init_bash() {
   fi
 
   # Set magic variables for current file & dir
-  __dir="$(cd "$(dirname "$source}")" && pwd)"
-  __file="${__dir}/$(basename "${source}")"
-  __base="$(basename "${__file}" .sh)"
-  __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
-  __SC2034="$__base $__root" && __SC2034=$__SC2034
+  declare -x __dir="$(cd "$(dirname "$source}")" && pwd)"
+  declare -x __file="${__dir}/$(basename "${source}")"
+  declare -x __base="$(basename "${__file}" .sh)"
+  declare -x __root="/acrossfw" # "$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
 }
 
-# [Templating with Linux in a Shell Script](http://serverfault.com/a/699377/276381)
 vpnet::init_config() {
   config_file=$1
   [[ "$config_file" =~ ^/ ]] || {
@@ -49,20 +47,22 @@ vpnet::init_config() {
   }
   
   echo "vpnet::init_config initing $config_file from $template_file ..."
+  # Templating with Linux in a Shell Script
+  # http://serverfault.com/a/699377/276381
   template="$(cat "${template_file}")"
   eval "echo \"${template}\"" > "$config_file"
 }
  
 vpnet::is_docker() {
   # XXX simulate docker for test
-  return 0
+  # return 0
   
   # http://stackoverflow.com/a/20012536/1123955
   if [[ $(head -1 /proc/1/cgroup) =~ /$ ]]; then
-    # end with '/', out docker
+    # end with '/', should be the host
     return -1
   else
-    # end with container string, insdie docker
+    # end with container string, should insdie docker
     return 0
   fi
 }
@@ -70,7 +70,7 @@ vpnet::is_docker() {
 vpnet::check_env() {
   [[ "$(id -u)" = 0 ]] || {
     echo "ERROR: must run as root"
-    exit -1
+    return -1
   }
 }
 
