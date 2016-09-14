@@ -157,8 +157,9 @@ Linting with [ShellCheck](https://github.com/koalaman/shellcheck)
 * [Getting everything right: baseimage-docker](https://phusion.github.io/baseimage-docker/)
 * [Templating with Linux in a Shell Script](http://serverfault.com/a/699377/276381)
 * [Best Practices for Writing Bash Script](http://kvz.io/blog/2013/11/21/bash-best-practices/)
+* [progrium/bashstyle](https://github.com/progrium/bashstyle)
 * [Returning Values from Bash Functions](http://www.linuxjournal.com/content/return-values-bash-functions)
-
+* 
 ## See Also
 
 1. [Internet Freedom](www.state.gov/e/eb/cip/netfreedom/index.htm) - Our goal is to ensure that any child, born anywhere in the world, has access to the global Internet as an open platform on which to innovate, learn, organize, and express herself free from undue interference or censorship.

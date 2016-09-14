@@ -6,7 +6,7 @@
 #
 # squid
 #
-source /acrossfw/vpnet-module.sh
+source /acrossfw/vpnet-functions.sh
 vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
 main() {
@@ -74,7 +74,7 @@ main() {
   http_reply_access allow all
   icp_access deny all
   coredump_dir /tmp
-  shutdown_lifetime 3
+  shutdown_lifetime 1
   
 SQUID_CONF
   
