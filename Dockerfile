@@ -13,7 +13,7 @@ MAINTAINER AcrossFW <dev@acrossfw.com>
 
 #
 #
-# START: VPNet.io
+# START: VPNet.io System Init
 #
 #
 
@@ -129,6 +129,20 @@ ENV SHADOWSOCKS_ENCRYPT_METHOD aes-256-cfb
 EXPOSE 8388/tcp 8388/udp
 
 #
+# KcpTun
+#
+# inspired by vimagick/kcptun
+#
+
+
+#
+# OpenVPN
+#
+#
+#
+
+
+#
 #
 # END - VPNet.io
 #
@@ -136,7 +150,7 @@ EXPOSE 8388/tcp 8388/udp
 
 # put COPY . . the end of Dockerfile for speedup build time by maximum cache usage
 COPY . .
-RUN cat /dev/null                                     > ${ACROSSFW_HOME}/ENV \
+RUN cat /dev/null                                      > ${ACROSSFW_HOME}/ENV \
   && echo "BUILD_HOST=\"$(hostname -f)\""             >> ${ACROSSFW_HOME}/ENV \
   && echo "BUILD_IP=\"$(curl -Ss ifconfig.io)\""      >> ${ACROSSFW_HOME}/ENV \
   && echo "BUILD_DATE=\"$(date)\""                    >> ${ACROSSFW_HOME}/ENV \

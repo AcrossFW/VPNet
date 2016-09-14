@@ -109,20 +109,18 @@ vpnet::init_network() {
 }
 
 vpnet::get_user_home() {
-  local n=${#@}
-  local __user_name
+  local __user_name=$1
+  local __resultvar=${2:-''}
+
   local __user_home
-  local __resultvar
   
-  case "$n" in
+  case "${#@}" in
     1)
-      __user_name=$1
       __user_home=$(eval echo ~"${__user_name}")
       echo "$__user_home"
       ;;
-    2)  # http://www.linuxjournal.com/content/return-values-bash-functions
-      __user_name=$1
-      __resultvar=$2
+    2)
+      # http://www.linuxjournal.com/content/return-values-bash-functions
       __user_home=$(eval echo ~"${__user_name}")
 
       # declare global variable http://stackoverflow.com/q/9871458/1123955
