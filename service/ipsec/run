@@ -4,7 +4,7 @@
 #
 # https://github.com/acrossfw/vpnet
 #
-# Inspired by https://github.com/gaomd/docker-ikev2-vpn-server
+# IPsec - Inspired by https://github.com/gaomd/docker-ikev2-vpn-server
 #
 
 source /acrossfw/vpnet-module.sh
@@ -44,10 +44,9 @@ ipsec::run() {
   # http://wiki.loopop.net/doku.php?id=server:vpn:strongswanonopenvz
   exec /usr/sbin/ipsec start --nofork
   
-  err_code=$?
-  echo "ERROR: ipsec::run error code $err_code"
+  echo "ERROR: ipsec::run exec ipsec exit with error code $?"
   sleep 1
-  exit $err_code
+  exit -1
 }
 
 main "$@"

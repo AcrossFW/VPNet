@@ -22,6 +22,10 @@ main() {
     echo "SSH: Heartbeat #$n ... "
     sleep 60
   done
+
+  echo "ERROR: ssh loop error, exited"
+  sleep 1
+  exit -1
 }
 
 # store ssh authorized key(if set)
@@ -57,7 +61,3 @@ ssh::init_admin() {
 }
 
 main "$@"
-
-echo "ERROR: ssh loop error, exited"
-sleep 1
-exit -1
