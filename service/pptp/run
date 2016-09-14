@@ -4,7 +4,9 @@
 #
 # https://github.com/acrossfw/vpnet
 #
-# pptpd
+# inspired by https://github.com/vimagick/dockerfiles/tree/master/pptpd
+#
+# pptp
 #
 
 cat << PPTPD_CONF > /etc/pptpd.conf

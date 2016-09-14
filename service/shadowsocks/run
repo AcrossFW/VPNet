@@ -4,6 +4,8 @@
 #
 # https://github.com/acrossfw/vpnet
 #
+# inspired by https://hub.docker.com/r/vimagick/shadowsocks-libev/
+#
 # ShadowSocks
 #
 source "$ACROSSFW_HOME/vpnet-functions.sh"

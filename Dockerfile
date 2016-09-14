@@ -96,6 +96,8 @@ EXPOSE 500/udp 4500/udp
 #
 # https://groups.google.com/forum/#!topic/docker-user/dC6aIr4R1hY
 #
+# inspired by https://github.com/vimagick/dockerfiles/tree/master/pptpd
+#
 # `rm pptpd.postinst` is a workaround of `no bus` error with systemd 
 RUN apt-get update -qq && apt-get install -qqy \
       pptpd \
@@ -115,6 +117,8 @@ EXPOSE 3128/tcp
 
 #
 # ShadowSocks
+#
+# inspired by https://hub.docker.com/r/vimagick/shadowsocks-libev/
 #
 RUN curl -s http://shadowsocks.org/debian/1D27208A.gpg | apt-key add - \
 	  && echo "deb http://shadowsocks.org/debian wheezy main" > /etc/apt/sources.list.d/shadowsocks.list \
