@@ -23,6 +23,7 @@ RUN apt-get update -qq && apt-get -qqy install \
     	curl \
     	iperf \
     	iptables \
+    	iptraf \
     	net-tools \
     	netcat \
     	shellcheck \
@@ -53,7 +54,9 @@ CMD [ "start" ]
 
 WORKDIR $ACROSSFW_HOME
 RUN ln -s /etc/service /service \
-  && ln -s ${ACROSSFW_HOME}/service/vpnet /service/vpnet
+  && ln -s ${ACROSSFW_HOME}/service/vpnet /service/vpnet \
+  && echo 'export WANIP=`curl -Ss ifconfig.io`' >> /etc/profile \
+  && echo '[[ "$PS1" =~ WANIP ]] || PS1=${PS1/\\h/\\h(\$WANIP)}' >> /etc/skell/.bashrc
 
 #
 # Node.JS

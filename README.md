@@ -49,7 +49,7 @@ VPNet is extreme easy to deploy by only one command, because it was built & ship
 
 ```shell
 # docker run -d --privileged --net=host \
-  -p 22:22 \
+  -p 2222:22 \
   -p 1723:1723 \
   -p 3128:3128 \
   -p 8388:8388 \
@@ -60,6 +60,10 @@ You are set. Cheers!
 
 ### Defaults
 
+* user: vpnet
+* pass: vpnet.io
+
+Enjoy!
 
 
 ## Out-of-the-box Features
@@ -143,6 +147,8 @@ docker run hello-world
 If you want to install docker for other linux distribution, documents can be found on docker.com at [Install Docker Engine](https://docs.docker.com/engine/installation/#installation).
 
 ## Coding Style
+
+Linting with [ShellCheck](https://github.com/koalaman/shellcheck)
 
 * [Shell Style Guide from Google](https://google.github.io/styleguide/shell.xml) - Use common sense and BE CONSISTENT.
 
