@@ -1,9 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 #
 # VPNet.io - Virtual Private Network Essential Toolbox
 #
 # https://github.com/acrossfw/vpnet
 #
+set -o errexit
+set -o pipefail
+set -o nounset
+
 docker_image="vpnet"
 net_mode=bridge
 
@@ -51,20 +55,23 @@ case "$arg1" in
 CMD
 		echo
 		echo "$docker_run"
+		
 		exec "$docker_run"
+		
 		echo "ERROR: exec docker fail with error code $"
 		exit -1
 		;;
 
 	exec)
 		container_id=$(docker ps | grep vpnet | awk '{print $1}' | head -1)
-		read -r docker_exec<<-CMD
-			docker exec -ti $container_id /bin/bash
-CMD
+		docker_exec="docker exec -ti $container_id /bin/bash"
+		
 		echo
 		echo "$docker_exec"
 		echo
+		
 		exec "$docker_exec"
+		
 		echo "ERROR: exec docker fail: $?"
 		exit -1
 		;;
