@@ -6,7 +6,7 @@
 #
 # Build Tool
 #
-source /acrossfw/vpnet-functions.sh
+source "/acrossfw/vpnet-functions.sh"
 vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
 main() {

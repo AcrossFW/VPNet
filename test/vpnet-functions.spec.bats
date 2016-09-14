@@ -6,7 +6,7 @@
 #
 # Unit Test by BATS/TAP
 #
-source /acrossfw/vpnet-functions.sh
+source "$ACROSSFW_HOME/vpnet-functions.sh"
 vpnet::init_bash ${BASH_SOURCE[0]} # set all the magic
 #set +o errexit
 #set +o pipefail

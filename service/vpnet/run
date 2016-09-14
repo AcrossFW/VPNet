@@ -1,9 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 #
 # VPNet.io - Virtual Private Network Essential Toolbox
 #
 # https://github.com/acrossfw/vpnet
 #
+source "$ACROSSFW_HOME/vpnet-functions.sh"
 
 while [ true ]; do
     echo 'vpnet working...'

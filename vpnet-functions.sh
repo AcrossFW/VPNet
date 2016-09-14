@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# VPNet.io - Virtual Private Network Essential Toolbox
+# VPNet - Virtual Private Network Essential Toolbox
 #
 # https://github.com/acrossfw/vpnet
 #

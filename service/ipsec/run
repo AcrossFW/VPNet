@@ -7,7 +7,7 @@
 # IPsec - Inspired by https://github.com/gaomd/docker-ikev2-vpn-server
 #
 
-source /acrossfw/vpnet-functions.sh
+source "$ACROSSFW_HOME/vpnet-functions.sh"
 # set all the magic
 vpnet::init_bash "${BASH_SOURCE[0]}"
 

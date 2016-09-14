@@ -132,10 +132,10 @@ EXPOSE 8388/tcp 8388/udp
 
 # put COPY . . the end of Dockerfile for speedup build time by maximum cache usage
 COPY . .
-RUN cat /dev/null                                > ${ACROSSFW_HOME}/ENV \
-  && echo "BUILD_HOST=\"$(hostname)\""              >> ${ACROSSFW_HOME}/ENV \
-  && echo "BUILD_DATE=\"$(date)\""                  >> ${ACROSSFW_HOME}/ENV
-#  && echo "LAST_COMMIT=$(git log --oneline -1)" >> ${ACROSSFW_HOME}/ENV
+RUN cat /dev/null                          > ${ACROSSFW_HOME}/ENV \
+  && echo "BUILD_HOST=\"$(hostname -f)\"" >> ${ACROSSFW_HOME}/ENV \
+  && echo "BUILD_DATE=\"$(date)\""        >> ${ACROSSFW_HOME}/ENV \
+  && echo "BUILD_VERSION=\"UNKNOWN\""     >> ${ACROSSFW_HOME}/ENV
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

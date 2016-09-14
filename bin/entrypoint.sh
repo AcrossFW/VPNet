@@ -5,18 +5,19 @@
 # https://github.com/acrossfw/vpnet
 #
 
-source /acrossfw/vpnet-functions.sh
+source "$ACROSSFW_HOME/vpnet-functions.sh"
 vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
 main() {
   local arg1=${1:-}
   
+  source "$ACROSSFW_HOME/ENV"
   echo
   echo "Starting VPNet Docker ..."
   echo
-  
-  echo -n "Getting my IP ... "
-  curl -sS ifconfig.io
+  echo "  Build ${BUILD_VERSION} by $BUILD_HOST on $BUILD_DATE"
+  echo "  Run on $(hostname) with IP $(curl -sS ifconfig.io)"
+  echo 
 
   vpnet::check_env
   
