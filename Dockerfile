@@ -31,7 +31,9 @@ RUN apt-get update -qq && apt-get -qqy install \
     	screen \
     	shellcheck \
     	tcpdump \
-    	tinc
+    	tinc \
+      \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV BATS_VERSION 0.4.0
 RUN curl -s -o "/tmp/v${BATS_VERSION}.tar.gz" -L \
@@ -92,7 +94,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
       strongswan \
       uuid-runtime \
     && rm /etc/ipsec.secrets \
-    && ln -s ${ACROSSFW_HOME}/service/ipsec /service/ipsec
+    && ln -s ${ACROSSFW_HOME}/service/ipsec /service/ipsec \
+    \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 EXPOSE 500/udp 4500/udp
 
 #
@@ -107,7 +111,9 @@ RUN apt-get update -qq && apt-get install -qqy \
       pptpd \
       || true \
     && rm -f rm /var/lib/dpkg/info/pptpd.postinst \
-    && ln -s ${ACROSSFW_HOME}/service/pptp /service/pptp
+    && ln -s ${ACROSSFW_HOME}/service/pptp /service/pptp \
+    \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 EXPOSE 1723/tcp
 
 #
@@ -116,7 +122,9 @@ EXPOSE 1723/tcp
 RUN apt-get update -qq && apt-get install -qqy \
       apache2-utils \
       squid \
-    && ln -s ${ACROSSFW_HOME}/service/squid /service/squid
+    && ln -s ${ACROSSFW_HOME}/service/squid /service/squid \
+    \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 EXPOSE 3128/tcp
 
 #
@@ -128,7 +136,10 @@ RUN curl -s http://shadowsocks.org/debian/1D27208A.gpg | apt-key add - \
 	  && echo "deb http://shadowsocks.org/debian wheezy main" > /etc/apt/sources.list.d/shadowsocks.list \
 	  && apt-get update -qq && apt-get install -qqy \
       shadowsocks-libev \
-    && ln -s ${ACROSSFW_HOME}/service/shadowsocks /service/shadowsocks
+    && ln -s ${ACROSSFW_HOME}/service/shadowsocks /service/shadowsocks \
+    \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    
 ENV SHADOWSOCKS_ENCRYPT_METHOD aes-256-cfb
 EXPOSE 8388/tcp 8388/udp
 
