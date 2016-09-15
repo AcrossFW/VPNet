@@ -21,11 +21,14 @@ MAINTAINER AcrossFW <dev@acrossfw.com>
 RUN apt-get update -qq && apt-get -qqy install \
     	apt-utils \
     	curl \
+    	inetutils-ping \
+    	inetutils-traceroute \
     	iperf \
     	iptables \
     	iptraf \
     	net-tools \
     	netcat \
+    	screen \
     	shellcheck \
     	tcpdump \
     	tinc
@@ -42,7 +45,7 @@ ENV ADMIN_NAME vpnet
 ENV ADMIN_PASS vpnet.io
 # TODO
 ENV USERS "user:pass"
-ENV HOSTNAME docker.vpnet.io
+ENV HOSTNAME vpnet.io
 ENV EMAIL dev@acrossfw.com
 
 ENV DNS 8.8.8.8
@@ -137,9 +140,13 @@ EXPOSE 8388/tcp 8388/udp
 
 
 #
-# OpenVPN
+# TODO:
 #
-#
+#   OpenVPN
+#     https://github.com/gaomd/docker-openvpn-static
+#   L2TP
+#   Tinc
+#   Avahi
 #
 
 
