@@ -21,8 +21,8 @@ set +o nounset # bats need this to run correctly
 }
 
 @test "Build ENV Variables" {
-  [[ -f "${__root}/ENV" ]]
-  source "${__root}/ENV"
+  [[ -f "${__root}/ENV.build" ]]
+  source "${__root}/ENV.build"
   
   [[ "$BUILD_DATE" ]]
   [[ "$BUILD_HOST" ]]

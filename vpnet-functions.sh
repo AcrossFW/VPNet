@@ -26,6 +26,10 @@ vpnet::init_bash() {
   declare -gx __file="${__dir}/$(basename "${source}")"
   declare -gx __base="$(basename "${__file}" .sh)"
   declare -gx __root="${ACROSSFW_HOME:-/acrossfw}" # "$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
+
+  if vpnet::is_docker ; then
+    source "$ACROSSFW_HOME/ENV.build"
+  fi
 }
 
 vpnet::init_config() {

@@ -10,8 +10,7 @@ vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
 main() {
   local arg1=${1:-}
-  
-  source "$ACROSSFW_HOME/ENV"
+
   echo
   echo "Starting VPNet Docker v$(head -1 ${__root}/VERSION) #${VERSION_HASH}"
   echo
