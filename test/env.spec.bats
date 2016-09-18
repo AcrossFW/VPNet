@@ -18,6 +18,11 @@ set +o nounset # bats need this to run correctly
   [[ "$ADMIN_NAME" ]]
   [[ "$ADMIN_PASS" ]]
   [[ "$DNS" ]]
+  
+  [[ "$PORT_SSH"          =~ ^-?[0-9]+$ ]]
+  [[ "$PORT_SQUID"        =~ ^-?[0-9]+$ ]]
+  [[ "$PORT_SHADOWSOCKS"  =~ ^-?[0-9]+$ ]]
+  [[ "$PORT_OPENVPN"      =~ ^-?[0-9]+$ ]]
 }
 
 @test "Build ENV Variables" {

@@ -18,7 +18,7 @@ main() {
   case $arg1 in 
     hash)
       hash=$(head -1 .git/logs/HEAD | awk '{print $2}')
-      echo ${hash:0:7}
+      echo "${hash:0:7}"
       ;;
       
     *)

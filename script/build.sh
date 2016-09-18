@@ -17,6 +17,7 @@ main() {
 
 	case "$arg1" in
 		build|'')
+			builder::lint
 			builder::build "$docker_image"						|| echo "ERROR: builder::build FAIL"
 			;;
 	
@@ -90,10 +91,10 @@ builder::run() {
 	# http://stackoverflow.com/a/1655389/1123955
 	read -r docker_run<<-CMD
 		docker run -ti --rm --privileged --net=$net_mode \
-  		-p 2222:22 \
   		-p 1723:1723 \
-  		-p 3128:3128 \
-  		-p 8388:8388 \
+  		-p 2222:10022 \
+  		-p 3128:13128 \
+  		-p 8388:18388 \
   		$docker_image
 CMD
 	echo

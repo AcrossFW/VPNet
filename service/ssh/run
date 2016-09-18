@@ -12,9 +12,10 @@ vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 main() {
   # local arg1=${1:-}
 
+  ssh::init_port
   ssh::init_admin
+  ssh::init_user
   ssh::init_authorized_keys
-#  ssh::init_users
 
   n=0
   while [[ true ]]; do
@@ -56,8 +57,18 @@ ssh::init_admin() {
   [[ -d "$ADD_USER_HOME" ]] || {
     adduser --quiet --disabled-password -shell /bin/bash --home "$ADD_USER_HOME" --gecos "$ADD_USER_NAME" "$ADD_USER_NAME"
   }
-  echo "SSH: Reset password every time ... "
+  # echo "ssh:init_admin: Reset password every time ... "
   echo "$ADD_USER_NAME:$ADD_USER_PASS" | chpasswd
+}
+
+ssh::init_user() {
+  echo "ssh::init_user TBD"
+}
+
+ssh::init_port() {
+  sed -i "s/^[# ]*Port .*/Port ${PORT_SSH}/i" /etc/ssh/sshd_config
+  echo "ssh::init_port $PORT_SSH"
+  sv restart /service/sshd
 }
 
 main "$@"

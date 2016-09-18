@@ -11,19 +11,20 @@ vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 main() {
   local arg1=${1:-}
 
+  vpnet::init_env_var
+
   echo
-  echo "Starting VPNet Docker v$(head -1 ${__root}/VERSION) #${VERSION_HASH}"
+  echo "Starting VPNet Docker v$(head -1 "${__root}/VERSION") #${VERSION_HASH}"
   echo
   echo "  https://github.com/acrossfw/vpnet"
   echo
   echo "  "
   echo "  Build by $BUILD_HOST($BUILD_IP) on $BUILD_DATE"
-  echo "  Run as $(hostname -f) with IP $(curl -sS ifconfig.io)"
+  echo "  Run as $(hostname -f) with IP $WANIP"
   echo 
 
   vpnet::check_env
   
-  vpnet::init_env_var
   vpnet::init_system
   vpnet::init_network
   # vpnet::init_service

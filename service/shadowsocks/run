@@ -14,7 +14,7 @@ vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 main() {
   ss_cmd=ss-server
   exec $ss_cmd -s 0.0.0.0 \
-  	-p 8388 \
+  	-p "${PORT_SHADOWSOCKS:-8388}" \
   	-k "${ADMIN_PASS:-vpnet.io}" \
   	-m "${SHADOWSOCKS_ENCRYPT_METHOD:-aes-256-cfb}" \
   	-t 300 \

@@ -61,6 +61,10 @@ vpnet::init_config() {
     return -1
   }
   
+  #
+  # $__dir is the magic variable set by init_bash
+  # standard for the script execute dir
+  #
   template_file="${__dir}/root${config_file}"
   [ -f "$template_file" ] || {
     echo "ERROR: vpnet::init_config cant find '$template_file'! must run in 'service/SRV/run'"

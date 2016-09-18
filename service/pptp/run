@@ -1,49 +1,38 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # VPNet.io - Virtual Private Network Essential Toolbox
-#
 # https://github.com/acrossfw/vpnet
-#
-# inspired by https://github.com/vimagick/dockerfiles/tree/master/pptpd
 #
 # pptp
 #
+source "$ACROSSFW_HOME/vpnet-functions.sh"
+vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
-cat << PPTPD_CONF > /etc/pptpd.conf
-option /etc/ppp/pptpd-options
-pidfile /var/run/pptpd.pid
-localip 192.168.127.1
-remoteip 192.168.127.100-199
-PPTPD_CONF
+main() {
+  vpnet::init_config /etc/pptpd.conf
+  vpnet::init_config /etc/ppp/pptpd-options
 
-cat << PPTPD_OPTIONS > /etc/ppp/pptpd-options
-name pptpd
-refuse-pap
-refuse-chap
-refuse-mschap
-require-mschap-v2
-require-mppe-128
-proxyarp
-nodefaultroute
-lock
-nobsdcomp
-novj
-novjccomp
-nologfd
-ms-dns ${DNS:-8.8.8.8}
-ms-dns ${DNS2:-8.8.4.4}
-PPTPD_OPTIONS
+  pptp::init_user
+  
+  pptp::exec
 
-cat << CHAP_SECRETS > /etc/ppp/chap-secrets
-$ADMIN_NAME	*	$ADMIN_PASS	*
+  error_code=$?
+  echo "exec pptpd exit with error code $error_code"
+  sleep 1
+  exit $error_code
+}
+
+pptp::init_user() {
+  # TBD: iterate USERS
+  cat << CHAP_SECRETS > /etc/ppp/chap-secrets
+    $ADMIN_NAME	*	$ADMIN_PASS	*
 CHAP_SECRETS
+}
 
-# operation not permited inside docker
-# modprobe nf_conntrack_pptp nf_nat_pptp
+pptp::exec() {
+  # operation not permited inside docker
+  # modprobe nf_conntrack_pptp nf_nat_pptp
+  exec pptpd --fg
+}
 
-exec pptpd --fg
-
-error_code=$?
-echo "exec pptpd exit with error code $error_code"
-sleep 1
-exit $error_code
+main "$@"
