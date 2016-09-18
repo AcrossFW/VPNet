@@ -62,7 +62,7 @@ RUN ln -s /etc/service /service \
   && ln -s ${ACROSSFW_HOME}/service/vpnet /service/vpnet \
   && echo 'export WANIP=`curl -Ss ifconfig.io`' >> /etc/profile \
   && echo 'cd # fix $PWD=/acrossfw right after login bug? do not know why yet.' >> /root/.bashrc \
-  && echo '[[ "$PS1" =~ WANIP ]] || PS1=${PS1//@\\\\h/@\\\\h(\$WANIP:-unknown-wan-ip)}' >> /root/.bashrc \
+  && echo '[[ "$PS1" =~ WANIP ]] || PS1=${PS1//@\\\\h/@\\\\h(\$WANIP)}' >> /root/.bashrc \
   && echo '[[ "$PS1" =~ WANIP ]] || PS1=${PS1//@\\\\h/@\\\\h(\$WANIP)}' >> /etc/skel/.bashrc
 
 #
@@ -81,10 +81,8 @@ RUN ln -s /etc/service /service \
 # START SSH
 #
 
-# to prevent conflict with host ssh standard port when run in --net=host mode
-# EXPOSE 22/tcp 
-ENV PORT_SSH 10022
-EXPOSE $PORT_SSH/tcp
+ENV PORT_SSH 10022 # to prevent conflict with host ssh standard port when run in --net=host mode
+EXPOSE ${PORT_SSH}/tcp
 
 # Regenerate SSH host keys. baseimage-docker does not contain any, so you
 # have to do that yourself. You may also comment out this instruction; the
@@ -127,6 +125,8 @@ EXPOSE 500/udp 4500/udp
 # START PPTP
 #
 
+EXPOSE 1723/tcp # PPTP Port must be standard(should not change?)
+
 # https://groups.google.com/forum/#!topic/docker-user/dC6aIr4R1hY
 #
 # inspired by https://github.com/vimagick/dockerfiles/tree/master/pptpd
@@ -140,8 +140,6 @@ RUN apt-get update -qq && apt-get install -qqy \
     \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# PPTP Port must be standard(should not change?)
-EXPOSE 1723/tcp
 
 #
 # END PPTP
@@ -151,7 +149,7 @@ EXPOSE 1723/tcp
 # START SQUID
 #
 ENV PORT_SQUID 13128
-EXPOSE $PORT_SQUID/tcp
+EXPOSE ${PORT_SQUID}/tcp
 
 RUN apt-get update -qq && apt-get install -qqy \
       apache2-utils \
@@ -168,9 +166,8 @@ RUN apt-get update -qq && apt-get install -qqy \
 # START SHADOWSOCKS
 #
 
-# do not use the standard port
-ENV PORT_SHADOWSOCKS 18388
-EXPOSE $PORT_SHADOWSOCKS/tcp $PORT_SHADOWSOCKS/udp
+ENV PORT_SHADOWSOCKS 18388 # do not use the standard port
+EXPOSE ${PORT_SHADOWSOCKS}/tcp ${PORT_SHADOWSOCKS}/udp
 
 ENV SHADOWSOCKS_ENCRYPT_METHOD aes-256-cfb
 
@@ -203,10 +200,8 @@ RUN curl -s http://shadowsocks.org/debian/1D27208A.gpg | apt-key add - \
 # START OPENVPN
 # TBD
 
-# do not use the standard port
-ENV PORT_OPENVPN 11194
-EXPOSE $PORT_OPENVPN/tcp $PORT_OPENVPN/udp
-
+ENV PORT_OPENVPN 11194 # do not use the standard port
+EXPOSE ${PORT_OPENVPN}/tcp ${PORT_OPENVPN}/udp
 
 # inspired by https://github.com/gaomd/docker-openvpn-static
 
@@ -220,7 +215,6 @@ EXPOSE $PORT_OPENVPN/tcp $PORT_OPENVPN/udp
 #   Tinc
 #   Avahi
 #
-
 
 #
 #
