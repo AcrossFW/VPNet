@@ -49,3 +49,11 @@ set +o nounset # bats need this to run correctly
   [[ $err_code != 0 ]]
   [[ -z "$empty" ]]
 }
+
+@test "vpnet::set_var_value" {
+  local resultvar="xxx"
+  local expected_value="expected"
+  vpnet::set_var_value "resultvar" "$expected_value"
+  
+  [[ "$resultvar" = "$expected_value" ]]
+}

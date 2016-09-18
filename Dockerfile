@@ -25,9 +25,9 @@ RUN apt-get update -qq && apt-get -qqy install \
     	inetutils-traceroute \
     	iperf \
     	iptables \
-    	iptraf \
     	net-tools \
     	netcat \
+    	nload \
     	screen \
     	shellcheck \
     	tcpdump \

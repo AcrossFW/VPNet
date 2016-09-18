@@ -132,34 +132,46 @@ vpnet::init_network() {
 }
 
 vpnet::get_user_home() {
-  local __user_name=$1
-  local __resultvar=${2:-''}
+  local user_name=${1:-''}
+  local resultvar=${2:-''}
 
-  local __user_home
-  
+  local user_home
+  user_home=$(eval echo ~"${user_name}")
+
+  local err_code=0
+
+  # non-exist user will not resolve and keep the origin string, which has a leading '~'
+  [[ "$user_home" =~ ^~ ]] && {
+    vpnet::log "ERROR: vpnet::get_user_home can not find home for user: %s\n" "${user_name}"
+    err_code=-1 # no such user
+  }
+
   case "${#@}" in
     1)
-      __user_home=$(eval echo ~"${__user_name}")
-      echo "$__user_home"
+      echo "$user_home"
       ;;
     2)
-      # http://www.linuxjournal.com/content/return-values-bash-functions
-      __user_home=$(eval echo ~"${__user_name}")
-
-      # declare global variable http://stackoverflow.com/q/9871458/1123955
-      eval "$__resultvar='$__user_home'"
-
+      # eval "$__resultvar='$__user_home'"
+      vpnet::set_var_value "$resultvar" "$user_home"
       ;;
     *)
-      return -1
+      vpnet::log "ERROR: vpnet::get_user_home should take 1 or 2 args"
+      err_code=-1
       ;;
   esac
-  
-  # non-exist user will not resolve and keep the origin string, which has a leading '~'
-  if [[ "$__user_home" =~ ^~ ]]; then
-    return -1
-  else
-    return 0
-  fi
+
+  return "$err_code"
 }
 
+# http://www.linuxjournal.com/content/return-values-bash-functions
+vpnet::set_var_value() {
+  __resultvar=$1
+  __value=$2
+  
+  # declare global variable http://stackoverflow.com/q/9871458/1123955
+  eval "$__resultvar='$__value'"
+}
+
+vpnet::log() {
+  eval "printf $*" >&2
+}
