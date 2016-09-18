@@ -63,7 +63,7 @@ builder::build() {
 		echo
 		echo
 		echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-		echo "ERROR: Build FAIL with exit code $err_code"
+		echo "ERROR: Build FAIL with exit code $?"
 		echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
 		echo
 		echo

@@ -81,7 +81,8 @@ RUN ln -s /etc/service /service \
 # START SSH
 #
 
-ENV PORT_SSH 10022 # to prevent conflict with host ssh standard port when run in --net=host mode
+# to prevent conflict with host ssh standard port when run in --net=host mode
+ENV PORT_SSH 10022
 EXPOSE ${PORT_SSH}/tcp
 
 # Regenerate SSH host keys. baseimage-docker does not contain any, so you
@@ -125,7 +126,8 @@ EXPOSE 500/udp 4500/udp
 # START PPTP
 #
 
-EXPOSE 1723/tcp # PPTP Port must be standard(should not change?)
+# PPTP Port must be standard(should not change?)
+EXPOSE 1723/tcp
 
 # https://groups.google.com/forum/#!topic/docker-user/dC6aIr4R1hY
 #
@@ -166,7 +168,8 @@ RUN apt-get update -qq && apt-get install -qqy \
 # START SHADOWSOCKS
 #
 
-ENV PORT_SHADOWSOCKS 18388 # do not use the standard port
+# do not use the standard port
+ENV PORT_SHADOWSOCKS 18388
 EXPOSE ${PORT_SHADOWSOCKS}/tcp ${PORT_SHADOWSOCKS}/udp
 
 ENV SHADOWSOCKS_ENCRYPT_METHOD aes-256-cfb
@@ -200,7 +203,8 @@ RUN curl -s http://shadowsocks.org/debian/1D27208A.gpg | apt-key add - \
 # START OPENVPN
 # TBD
 
-ENV PORT_OPENVPN 11194 # do not use the standard port
+# do not use the standard port
+ENV PORT_OPENVPN 11194
 EXPOSE ${PORT_OPENVPN}/tcp ${PORT_OPENVPN}/udp
 
 # inspired by https://github.com/gaomd/docker-openvpn-static
