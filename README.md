@@ -48,12 +48,7 @@ Being an Anti-Censorship Technology, VPNet has to try the best to adapt.
 VPNet is extreme easy to deploy by only one command, because it was built & shiped by docker:
 
 ```shell
-# docker run -d --privileged --net=host \
-  -p 2222:22 \
-  -p 1723:1723 \
-  -p 3128:3128 \
-  -p 8388:8388 \
-  acrossfw/vpnet
+docker run -d --privileged --net=host acrossfw/vpnet
 ```
 
 You are set. Cheers!
@@ -68,7 +63,15 @@ Enjoy!
 
 ## Out-of-the-box Features
 
-> Sort by port number
+> Sort by standard port number
+
+| Service | Standard Port | VPNet Port | ENV Variables |
+|   ---   |      ---      |     ---    |      ---      |
+|   SSH   |      22       |   10022    |               |
+|   PPTP  |      1723     |    1723    |               |
+| ShadowSocks |  8388     |   18388    |               |
+
+_About Port Number: some added 10000 to prevent conflict with host(ONE for all)_
 
 ### 1. SSH
 
