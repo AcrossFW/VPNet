@@ -23,6 +23,7 @@ main() {
 
   vpnet::check_env
   
+  vpnet::init_env_var
   vpnet::init_system
   vpnet::init_network
   # vpnet::init_service

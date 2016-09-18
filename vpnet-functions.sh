@@ -26,10 +26,32 @@ vpnet::init_bash() {
   declare -gx __file="${__dir}/$(basename "${source}")"
   declare -gx __base="$(basename "${__file}" .sh)"
   declare -gx __root="${ACROSSFW_HOME:-/acrossfw}" # "$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
+}
 
+vpnet::init_env_var() {
   if vpnet::is_docker ; then
     source "$ACROSSFW_HOME/ENV.build"
+    
+    [[ -f "$ACROSSFW_HOME/ENV.config" ]] && {
+      source "$ACROSSFW_HOME/ENV.config"
+    }
   fi
+  
+  declare -gx WANIP=$(curl -Ss ifconfig.io)
+}
+
+vpnet::check_env() {
+  [[ "$(id -u)" = 0 ]] || {
+    echo "ERROR: must run as root"
+    return -1
+  }
+  
+  [[ "${ACROSSFW_HOME}" ]] || {
+    echo "ERROR: ACROSSFW_HOME environment variable not defined"
+    return -1
+  }
+  
+  return 0
 }
 
 vpnet::init_config() {
@@ -69,13 +91,6 @@ vpnet::is_docker() {
     # end with container string, should insdie docker
     return 0
   fi
-}
-
-vpnet::check_env() {
-  [[ "$(id -u)" = 0 ]] || {
-    echo "ERROR: must run as root"
-    return -1
-  }
 }
 
 #
