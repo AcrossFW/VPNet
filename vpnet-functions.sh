@@ -57,7 +57,7 @@ vpnet::check_env() {
 vpnet::init_config() {
   config_file=$1
   [[ "$config_file" =~ ^/ ]] || {
-    echo "ERROR: vpnet::init_config need absolute filename start with '/'"
+    vpnet::log "ERROR: vpnet::init_config need absolute filename start with '/'"
     return -1
   }
   
@@ -67,12 +67,12 @@ vpnet::init_config() {
   #
   template_file="${__dir}/root${config_file}"
   [ -f "$template_file" ] || {
-    echo "ERROR: vpnet::init_config cant find '$template_file'! must run in 'service/SRV/run'"
+    vpnet::log "ERROR: vpnet::init_config cant find '$template_file'! must run in 'service/SRV/run'"
     return -1
   }
   
   vpnet::is_docker || {
-    echo "ERROR: vpnet::init_config can only run inside docker(or it will overwrite root filesystem)"
+    vpnet::log "ERROR: vpnet::init_config can only run inside docker(or it will overwrite root filesystem)"
     exit -1
   }
   
@@ -133,41 +133,52 @@ vpnet::init_network() {
 
 vpnet::get_user_home() {
   local user_name=${1:-''}
-  local resultvar=${2:-''}
+  local __resultvar=${2:-''}
 
-  local user_home
-  user_home=$(eval echo ~"${user_name}")
+  case $__resultvar in
+    '__resultvar'|'__user_home'|'user_name'|'error_code')
+      vpnet::log "ERROR: vpnet::get_user_home __user_home is reserved by this function"
+      return -1
+      ;;
+  esac
 
-  local err_code=0
+  local __user_home
+  local error_code
+  
+  __user_home=$(eval echo ~"$user_name")
+  error_code=0
 
   # non-exist user will not resolve and keep the origin string, which has a leading '~'
-  [[ "$user_home" =~ ^~ ]] && {
-    vpnet::log "ERROR: vpnet::get_user_home can not find home for user: %s\n" "${user_name}"
-    err_code=-1 # no such user
+  [[ "$__user_home" =~ ^~ ]] && {
+    vpnet::log "ERROR: vpnet::get_user_home can not find home for user: %s\n" "$user_name"
+    error_code=-1 # no such user
   }
 
   case "${#@}" in
     1)
-      echo "$user_home"
+      echo "$__user_home"
       ;;
     2)
-      # eval "$__resultvar='$__user_home'"
-      vpnet::set_var_value "$resultvar" "$user_home"
+      vpnet::set_var_value "$__resultvar" "$__user_home"
       ;;
     *)
       vpnet::log "ERROR: vpnet::get_user_home should take 1 or 2 args"
-      err_code=-1
+      error_code=-1
       ;;
   esac
 
-  return "$err_code"
+  return "$error_code"
 }
 
 # http://www.linuxjournal.com/content/return-values-bash-functions
 vpnet::set_var_value() {
-  __resultvar=$1
-  __value=$2
+  local __resultvar=$1
+  local __value=$2
   
+  if [[ "$__resultvar" = "__resultvar" || "$__resultvar" = "__value" ]]; then
+    vpnet::log "ERROR: vpnet::set_var_value reserved name: __resultvar & __value"
+    return -1
+  fi
   # declare global variable http://stackoverflow.com/q/9871458/1123955
   eval "$__resultvar='$__value'"
 }
