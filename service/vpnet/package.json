@@ -1,0 +1,22 @@
+{
+  "name": "vpnet-server",
+  "version": "0.0.1",
+  "description": "vpnet.io web service",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo test ok"
+  },
+  "keywords": [
+    "vpnet",
+    "acrossfw",
+    "gfwrt"
+  ],
+  "author": "AcrossFW <dev@acrossfw.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "http-proxy-middleware": "^0.17.1",
+    "npmlog": "^4.0.0"
+  }
+}
