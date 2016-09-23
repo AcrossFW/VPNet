@@ -44,15 +44,14 @@ main() {
       
     test)
       bats_cmd="bats ${__root}/test/*.bats"
-      
-      echo
-      echo "$bats_cmd"
+
       echo
       echo "Start testing ... "
       echo
       
       $bats_cmd
-      
+      cd service/vpnet && npm test && cd -
+
       if [ $? != 0 ]; then
         echo
         echo "ERROR: Test FAIL"

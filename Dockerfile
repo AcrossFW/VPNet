@@ -237,13 +237,13 @@ EXPOSE ${PORT_OPENVPN}/tcp ${PORT_OPENVPN}/udp
 # put COPY . . the end of Dockerfile for speedup build time by maximum cache usage
 COPY . .
 
-RUN cd service/vpnet && npm test
-
 RUN cat /dev/null                                      > ${ACROSSFW_HOME}/ENV.build \
   && echo "BUILD_HOST=\"$(hostname -f)\""             >> ${ACROSSFW_HOME}/ENV.build \
   && echo "BUILD_IP=\"$(curl -Ss ifconfig.io)\""      >> ${ACROSSFW_HOME}/ENV.build \
   && echo "BUILD_DATE=\"$(date)\""                    >> ${ACROSSFW_HOME}/ENV.build \
   && echo "VERSION_HASH=\"$(./bin/version.sh hash)\"" >> ${ACROSSFW_HOME}/ENV.build
+
+RUN ./bin/entrypoint.sh test
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

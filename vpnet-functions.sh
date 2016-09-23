@@ -104,7 +104,7 @@ vpnet::init_system() {
   echo "Setting hostname to $HOSTNAME ..."
   # XXX: this will not work in --net=host mode
   # https://github.com/docker/docker/issues/5708
-  hostname "$HOSTNAME"
+  hostname "$HOSTNAME" || echo "WARN: set hostname fail"
   
   echo "Disabling coredump ..."
   sysctl fs.suid_dumpable=0 
@@ -114,17 +114,17 @@ vpnet::init_system() {
 
 vpnet::init_network() {
   echo "Setting ip forwarding to 1 ..."
-  sysctl net.ipv4.ip_forward=1
-  sysctl net.ipv4.conf.all.forwarding=1
-  sysctl net.ipv6.conf.all.forwarding=1
-  sysctl net.ipv6.conf.all.proxy_ndp=1
-  echo 1 > /proc/sys/net/ipv4/route/flush
+  sysctl net.ipv4.ip_forward=1            || echo "WARN: sysctl fail"
+  sysctl net.ipv4.conf.all.forwarding=1   || echo "WARN: sysctl fail"
+  sysctl net.ipv6.conf.all.forwarding=1   || echo "WARN: sysctl fail"
+  sysctl net.ipv6.conf.all.proxy_ndp=1    || echo "WARN: sysctl fail"
+  echo 1 > /proc/sys/net/ipv4/route/flush || echo "WARN: sysctl fail"
   
   # XXX does there always be `eth0` in docker ???
   echo "Setting network filter ..."
-  iptables -t nat -A POSTROUTING -s 10.0.0.0/8      -o eth0 -j MASQUERADE
-  iptables -t nat -A POSTROUTING -s 172.16.0.0/12   -o eth0 -j MASQUERADE
-  iptables -t nat -A POSTROUTING -s 192.168.0.0/16  -o eth0 -j MASQUERADE
+  iptables -t nat -A POSTROUTING -s 10.0.0.0/8      -o eth0 -j MASQUERADE || echo "WARN: iptables fail"
+  iptables -t nat -A POSTROUTING -s 172.16.0.0/12   -o eth0 -j MASQUERADE || echo "WARN: iptables fail"
+  iptables -t nat -A POSTROUTING -s 192.168.0.0/16  -o eth0 -j MASQUERADE || echo "WARN: iptables fail"
   
   # ip6tables -t nat -A POSTROUTING -s 2a00:1450:400c:c05::/64 -o eth0 -j MASQUERADE
 
