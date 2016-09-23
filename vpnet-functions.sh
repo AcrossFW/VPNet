@@ -150,7 +150,7 @@ vpnet::get_user_home() {
 
   # non-exist user will not resolve and keep the origin string, which has a leading '~'
   [[ "$__user_home" =~ ^~ ]] && {
-    vpnet::log "ERROR: vpnet::get_user_home can not find home for user: %s\n" "$user_name"
+    vpnet::log "ERROR: vpnet::get_user_home can not find home for user: %s" "$user_name"
     error_code=-1 # no such user
   }
 
@@ -185,4 +185,5 @@ vpnet::set_var_value() {
 
 vpnet::log() {
   eval "printf $*" >&2
+  echo >&2
 }

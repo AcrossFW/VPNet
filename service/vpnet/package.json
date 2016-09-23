@@ -12,6 +12,10 @@
     "acrossfw",
     "gfwrt"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acrossfw/vpnet.git"
+  },
   "author": "AcrossFW <dev@acrossfw.com>",
   "license": "ISC",
   "dependencies": {

@@ -8,7 +8,7 @@
 # to `latest`! See
 # https://github.com/phusion/baseimage-docker/blob/master/Changelog.md
 # for a list of version numbers.
-FROM phusion/baseimage:latest
+FROM phusion/baseimage:0.9.19
 MAINTAINER AcrossFW <dev@acrossfw.com>
 
 #
@@ -21,6 +21,7 @@ MAINTAINER AcrossFW <dev@acrossfw.com>
 RUN apt-get update -qq && apt-get -qqy install \
     	apt-utils \
     	curl \
+    	dnsutils \
     	inetutils-ping \
     	inetutils-traceroute \
     	iperf \
@@ -34,6 +35,8 @@ RUN apt-get update -qq && apt-get -qqy install \
     	tinc \
       \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+#    && sed -i 's/files dns/files/g' /etc/nsswitch.conf \
 
 ENV BATS_VERSION 0.4.0
 RUN curl -s -o "/tmp/v${BATS_VERSION}.tar.gz" -L \
@@ -68,9 +71,14 @@ RUN ln -s /etc/service /service \
 #
 # Node.JS
 #
-# RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
-#	&& apt-get install -qqy nodejs
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
+  && apt-get install -qqy nodejs
 
+COPY service/vpnet/package.json service/vpnet/
+
+RUN cd service/vpnet \
+  && npm install
+  
 #
 #
 # END HEADER - VPNet.io
@@ -228,6 +236,9 @@ EXPOSE ${PORT_OPENVPN}/tcp ${PORT_OPENVPN}/udp
 
 # put COPY . . the end of Dockerfile for speedup build time by maximum cache usage
 COPY . .
+
+RUN cd service/vpnet && npm test
+
 RUN cat /dev/null                                      > ${ACROSSFW_HOME}/ENV.build \
   && echo "BUILD_HOST=\"$(hostname -f)\""             >> ${ACROSSFW_HOME}/ENV.build \
   && echo "BUILD_IP=\"$(curl -Ss ifconfig.io)\""      >> ${ACROSSFW_HOME}/ENV.build \

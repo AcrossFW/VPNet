@@ -151,14 +151,14 @@ builder::ssh() {
 	local ssh_host
 	local ssh_port
 	
+	ssh_port=10022
+	
 	case "$net_mode" in
 		host)
 			ssh_host='localhost'
-			ssh_port=2222
 			;;
 		bridge|*)
 			ssh_host=$(docker ps | grep vpnet | awk '{print $1}' | xargs docker inspect | grep IPAddress | grep 172 | awk -F\" '{print $4}' | head -1)
-			ssh_port=22
 			;;
 	esac
 	
