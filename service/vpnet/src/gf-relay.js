@@ -11,8 +11,13 @@ const httpProxyMiddleware = require('http-proxy-middleware')
 const log = require('npmlog')
 
 class GfRelay {
-  constructor(mountPath) {
-    this.mountPath = mountPath
+  constructor({
+    prefix
+    , host
+  } = {}) {
+    this.prefix = prefix
+    this.host = host
+    
     this._router = Router({ strict: true })
     this.init()
   }
@@ -54,7 +59,7 @@ class GfRelay {
     for (let dist of this.list()) {
       const target = this.target(dist)
       const pathRewrite = {}
-      const pathRegex = '^' + this.mountPath + dist
+      const pathRegex = '^' + this.prefix + dist
       pathRewrite[pathRegex] = ''
 
       const proxy = httpProxyMiddleware({
@@ -80,7 +85,10 @@ class GfRelay {
   target(dist) {
     return this.relayMap[dist]
   }
-  
+ 
+  url(dist) {
+    return 'http://' + this.host + this.prefix + dist + '/'
+  } 
 }
 
 module.exports = GfRelay.default = GfRelay.GfRelay = GfRelay
