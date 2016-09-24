@@ -36,10 +36,16 @@ vpnet::init_env_var() {
       source "$ACROSSFW_HOME/ENV.config"
     }
   fi
-  
   declare -gx WANIP=$(curl -Ss ifconfig.io)
+
+  vpnet::init_host_id
 }
 
+vpnet::init_host_id() {
+  local id=$(ip addr show eth0 | grep ether | awk '{print $2}' | awk -F: '{print $5$6}')
+  HOSTNAME=${HOSTNAME/vpnet./vpnet-$id.}
+}
+  
 vpnet::check_env() {
   [[ "$(id -u)" = 0 ]] || {
     echo "ERROR: must run as root"
