@@ -34,24 +34,24 @@ class GfRelay {
   initRelayMap() {
     this.relayMap = {
       shadowsocks: 'http://openwrt-dist.sourceforge.net'
+      , openwrt: 'https://downloads.openwrt.org'
     }
   }  
 
   initRouterRoot() {
-    this._router.get('/', (req, res, next) => {
-      if (!/\/$/.test(req.originalUrl)) {
-        res.redirect(req.originalUrl + '/')
-        res.end()
-        return
-      }
-      
+    this._router.get('/', this.fixTrailingSlashes, (req, res, next) => {
+
+      res.writeHead(200, { 'Content-Type': 'text/html' })
+      res.write('<ol>')
       for (let dist of this.list()) {
         res.write(`
-          <a href="${dist}/">${dist}</a>
+          <li><a href="${dist}/">${dist}</a></li>
         `)
       }
+      res.write('</ol>')
       res.write('<p>VPNet.io OK</p>')
       res.end()
+
     })
   }
 
@@ -70,8 +70,12 @@ class GfRelay {
       })
     
       // log.verbose('Proxy', 'mapping [%s] to [%s]', dist, target)
-      this._router.use('/' + dist + '/', proxy)
+      this._router.use('/' + dist + '/'
+                        , this.fixTrailingSlashes
+                        , proxy
+                      )
     }
+    
   }
   
   list() {
@@ -89,6 +93,17 @@ class GfRelay {
   url(dist) {
     return 'http://' + this.host + this.prefix + dist + '/'
   } 
+  
+  fixTrailingSlashes(req, res, next) {
+    // http://stackoverflow.com/a/35927027/1123955
+    // console.log(`\n\n### ${req.originalUrl} ${req.baseUrl} ${req.url} \n\n\n`)
+    if (req.originalUrl != req.baseUrl + req.url) {
+      res.redirect(301, req.baseUrl + req.url)
+    } else {
+      next()
+    }
+  }
+
 }
 
 module.exports = GfRelay.default = GfRelay.GfRelay = GfRelay

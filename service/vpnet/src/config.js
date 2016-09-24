@@ -7,21 +7,22 @@
  * 
  */
  
- class Config {
-   constructor() {
-     this.init()
-   }
+class Config {
+  constructor() {
+    this.init()
+  }
    
-   init() {
-     this._ip = process.env.WANIP || require('child_process')
+  init() {
+    this._ip = process.env.WANIP || require('child_process')
                                       .execSync('curl -Ss ifconfig.io')
                                       .toString()
                                       .replace('\n', '')
-   }
-   
-   ip() {
-     return this._ip
-   }
+    this._port = process.env.PORT_WEB || 10080
+  }
+     
+  ip()    { return this._ip   }
+  port()  { return this._port }
+
  }
  
  module.exports = Config.default = Config.Config = Config

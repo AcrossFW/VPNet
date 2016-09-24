@@ -74,6 +74,9 @@ RUN ln -s /etc/service /service \
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
   && apt-get install -qqy nodejs
 
+ENV PORT_WEB 10080
+EXPOSE ${PORT_WEB}/tcp
+
 COPY service/vpnet/package.json service/vpnet/
 
 RUN cd service/vpnet \
