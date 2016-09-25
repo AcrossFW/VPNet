@@ -6,44 +6,167 @@
  * https://github.com/acrossfw/vpnet
  * 
  */
- 
-const Config = require('./config')
+const fs  = require('fs') 
+const log = require('npmlog')
 
-class GfWrt{
-  constructor(uuid) {
-    if (!uuid) {
-      throw new Error('no uuid defined')
+const config  = require('./config')
+const db      = require('./db')
+
+class GfWrt {
+  constructor(userOrUuid) {
+    log.verbose('GfWrt', 'constructor(%s)', userOrUuid)
+    
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userOrUuid)) {
+      // http://stackoverflow.com/a/13653180/1123955
+      this._uuid = userOrUuid
+    } else {
+      this._user = userOrUuid
     }
-    this.uuid = uuid
-    this.init()
+  }
+
+  ready() {
+    log.verbose('GfWrt', 'ready()')
+    if (this.valid()) {
+      log.silly('GfWrt', 'ready() valid')
+      return Promise.resolve(this)
+    }
+    log.silly('GfWrt', 'ready() invalid')
+
+    this._name = config.hostname()
+    this._ip   = config.ip()
+    this._port = config.port('ssh')
+    
+    if (this._uuid) {
+      return this.loadUuid(this._uuid)
+    } else if (this._user) {
+      return this.create(this._user)
+    }
+  } 
+  
+  valid() {
+    return !!(this._uuid && this._user)
+  }
+
+  create(forUser) {
+    log.verbose('GfWrt', 'create(%s)', forUser)
+    
+    if (!/^[\w\d-_\.]+$/.test(forUser)) {
+      throw new Error('not a valid user to creat: ' + forUser)
+    }
+    
+    const sshKeyFile = '/home/' + forUser + '/.ssh/id_rsa'
+    fs.accessSync(sshKeyFile, fs.F_OK)
+    
+    this._user  = forUser
+    this._key   = sshKeyFile
+    
+    this._linklocal = GfWrt.guip()
+    this._uuid      = GfWrt.guid()
+    
+    return this.save()
   }
   
-  init() {
-    const config = new Config()
+  save() {
+    log.verbose('GfWrt', 'save()')
     
-    this.name = config.hostname()
-    this.ip   = config.ip()
-    this.port = config.port('ssh')
+    if (!this.valid()) {
+      return Promise.reject(new Error('not valid for save'))
+    }
     
-    this.user='vpnet'
-    this.linklocal='169.254.33.33'
-    this.key='~vpnet/.ssh/id_rsa'
-    
-      // uci set gfwrt.vpnet='server'
-      // uci set gfwrt.vpnet.uuid='f9688e84-4ed6-4bfb-922b-f6c281a34d7d'
-      // uci set gfwrt.vpnet.name='vpnet-0303'
-      // uci set gfwrt.vpnet.user=vpnet
-      // uci set gfwrt.vpnet.ip=1.2.3.4
-      // uci set gfwrt.vpnet.port=10022
-      // uci set gfwrt.vpnet.linklocal=169.254.1.22
-      // uci set gfwrt.vpnet.key='/etc/dropbear/vpnet-0303.key'
+    return new Promise((resolve, reject) => {
+      db.insert({
+        _id: this.uuid()
+        , ip: this.ip()
+        , port: this.port()
+        , name: this.name()
+        , linklocal: this.linklocal()
+        , key: this.key()
+      }, (err, doc) => {
+        if (err) {
+          return reject(err)
+        }
+        // return resolve(doc)
+        return this
+      })      
+    })
   }
   
-  uuid()  { return this.uuid }
-  name()  { return this.name }
-  user()  { return this.user }
-  ip()    { return this.ip }
-  port()  { return this.port }
-  linklocal() { return this.linklocal }
-  key()   { return this.key }
+  remove() {
+    log.verbose('GfWrt', 'remove()')
+    return new Promise((resolve, reject) => {
+      db.remove({
+        _id: this.uuid()
+      }
+      , {}
+      , (err, numRemoved) => {
+        if (err) {
+          reject(err)
+        } else {
+          console.log('numRemoved:' + numRemoved)
+          this._uuid = null
+          resolve(numRemoved)
+        }
+      })
+    })
+  }
+  
+  loadUuid(uuid) {
+    log.verbose('GfWrt', 'loadUuid(%s', uuid)
+    
+    return new Promise((resolve, reject) => {
+      db.findOne({_id: uuid}, (err, doc) => {
+        if (err) {
+          return reject(err)
+        }
+        this._uuid      = doc._id
+        this._user      = doc.user
+        this._linklocal = doc.linklocal
+        this._key       = doc.key
+        return resolve(this)
+      })      
+    })
+  }
+  
+  ip()        { return this._ip }
+  key()       { return this._key }
+  linklocal() { return this._linklocal }
+  port()      { return this._port }
+  user()      { return this._user }
+  uuid()      { return this._uuid }
+
+  static list(forUser) {
+    log.verbose('GfWrt', 'list(%s)', forUser)
+    
+    const query = {}
+    if (forUser) {
+      query.user = forUser
+    }
+    return new Promise((resolve, reject) => {
+      db.find(query, (err, docs) => {
+        if (err) {
+          return reject(err)
+        }
+        const gfWrtList = docs.map(c => new GfWrt(c._id))
+        resolve(gfWrtList)
+      })
+    })
+  }
+
+  static guip() {
+    return '169.254.x.y'.replace(/[xy]/g, _ => {
+      return Math.random()*255|0
+    })
+  }
+  
+  static guid() {
+    // http://stackoverflow.com/a/2117523/1123955
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8)
+      return v.toString(16)
+    })
+  }
+
 }
+
+  
+module.exports = GfWrt.default = GfWrt.GfWrt = GfWrt
