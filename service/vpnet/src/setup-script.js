@@ -22,26 +22,50 @@ class SetupScript {
 5. trigger vpnet setup to start
   */
   generate() {
+    const header      = this.scriptHeader()
     const setupUci    = this.scriptSetupUci()
     const saveKey     = this.scriptSaveKey('/tmp/test')
     const connectVpn  = this.scriptConnectVpn()
     const notifyVpnet = this.scriptNotifyVpnet()
 
     return `
+      ${header}
       ${setupUci}
       ${saveKey}
       ${connectVpn}
       ${notifyVpnet}
-    `
+    `.replace(/^\s+/gm, '')
   }
 
+  scriptHeader() {
+    return `
+      #!/usr/bin/env sh
+      #
+      # VPNet <-> gfWRT Connector Script
+      # https://github.com/AcrossFW
+      #
+      # VPNet (Virtual Private Network Essential Toolbox)
+      # All in ONE, ZERO Configuration Solution for Tunnel Servers' setup 
+      # https://github.com/AcrossFW/VPNet
+      #
+      # gfWRT (Wireless RouTer for your Girl Friend)
+      # Set it Once and Forget it Forever.
+      # https://github.com/AcrossFW/gfWRT
+      #
+      
+    `
+  }
+  
   scriptSetupUci() {
     return `
+      ######################
+      # scriptSetupUci
+      ######################
       touch /etc/config/gfwrt
       
       uci set gfwrt.vpnet='server'
       uci set gfwrt.vpnet.uuid='f9688e84-4ed6-4bfb-922b-f6c281a34d7d'
-      uci set gfwrt.vpnet.name='vpnet-0303'
+      # uci set gfwrt.vpnet.name='vpnet-0303'
       uci set gfwrt.vpnet.user=vpnet
       uci set gfwrt.vpnet.ip=1.2.3.4
       uci set gfwrt.vpnet.port=10022
@@ -55,6 +79,9 @@ class SetupScript {
     const base64Str = this.base64DropbearKey(sshKeyFile)
     const luaDecoder = this.scriptLuaDecoder(base64Str) 
     return `
+      ######################
+      # scriptSaveKey
+      ######################
       ${luaDecoder} > /etc/dropbear/vpnet-0303.key
     `
   }
@@ -112,12 +139,22 @@ class SetupScript {
   }
   
   scriptConnectVpn() {
-    return 'echo "connect vpn"'
+    return `
+      ######################
+      # scriptConnectVpn
+      ######################
+      echo "connect vpn"
+    `
   }
   scriptNotifyVpnet() {
-    return 'echo "notify vpnet"'
+    return `
+      ######################
+      # scriptNotifyVpnet
+      ######################
+      echo "notify vpnet"
+    `
   }
 }
 
 const ss = new SetupScript(1234)
-console.log(ss.script())
+console.log(ss.generate())
