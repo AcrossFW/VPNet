@@ -21,6 +21,7 @@
   "dependencies": {
     "express": "^4.14.0",
     "http-proxy-middleware": "^0.17.1",
+    "nedb": "^1.8.0",
     "npmlog": "^4.0.0"
   },
   "devDependencies": {
