@@ -17,9 +17,12 @@ class Config {
                                       .execSync('curl -Ss ifconfig.io')
                                       .toString()
                                       .replace('\n', '')
+    this._nedb = '/tmp/vpnet.nedb'
   }
      
-  ip()    { return this._ip   }
+  hostname()  { return process.env.HOSTNAME }
+  ip()        { return this._ip   }
+  nedb()      { return this._nedb }
 
   port(service = 'web') {
     let portVar = 'PORT_' + service.toUpperCase()
@@ -30,9 +33,8 @@ class Config {
     return port
   }
 
-  hostname() {
-    return process.env.HOSTNAME
-  }
- }
- 
- module.exports = Config.default = Config.Config = Config
+}
+
+const config = new Config
+
+module.exports = config
