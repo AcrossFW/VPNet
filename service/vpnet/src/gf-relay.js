@@ -15,8 +15,8 @@ class GfRelay {
     prefix
     , host
   } = {}) {
-    this.prefix = prefix
-    this.host = host
+    this._prefix = prefix
+    this._host = host
     
     this._router = Router({ strict: true })
     this.init()
@@ -29,6 +29,7 @@ class GfRelay {
     this.initRouterDist()
   }
 
+  prefix() { return this._prefix }
   router() { return this._router }
   
   initRelayMap() {
@@ -59,7 +60,7 @@ class GfRelay {
     for (let dist of this.list()) {
       const target = this.target(dist)
       const pathRewrite = {}
-      const pathRegex = '^' + this.prefix + dist
+      const pathRegex = '^' + this._prefix + dist
       pathRewrite[pathRegex] = ''
 
       const proxy = httpProxyMiddleware({
@@ -91,7 +92,7 @@ class GfRelay {
   }
  
   url(dist) {
-    return 'http://' + this.host + this.prefix + dist + '/'
+    return 'http://' + this._host + this._prefix + dist + '/'
   } 
   
   fixTrailingSlashes(req, res, next) {
