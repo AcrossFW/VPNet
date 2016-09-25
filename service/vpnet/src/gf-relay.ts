@@ -6,15 +6,25 @@
  * https://github.com/acrossfw/vpnet
  * 
  */
-const { Router } = require('express')
-const httpProxyMiddleware = require('http-proxy-middleware')
-const log = require('npmlog')
+import { Router } from 'express'
+import * as log from 'npmlog'
+import * as HttpProxyMiddleware from 'http-proxy-middleware'
 
 class GfRelay {
+  _prefix:  string
+  _host:    string
+  _router:  Router
+
+  relayMap: {}
+
   constructor({
-    prefix
-    , host
+    prefix = null
+    , host = null
   } = {}) {
+    if (!prefix || !host) {
+      throw new Error('must provide prefix and host')
+    }
+    
     this._prefix = prefix
     this._host = host
     
@@ -40,7 +50,7 @@ class GfRelay {
   }  
 
   initRouterRoot() {
-    this._router.get('/', this.fixTrailingSlashes, (req, res, next) => {
+    (this._router as any).get('/', this.fixTrailingSlashes, (req, res, next) => {
 
       res.writeHead(200, { 'Content-Type': 'text/html' })
       res.write('<ol>')
@@ -60,18 +70,26 @@ class GfRelay {
     for (let dist of this.list()) {
       const target = this.target(dist)
       const pathRewrite = {}
-      const pathRegex = '^' + this._prefix + dist
-      pathRewrite[pathRegex] = ''
+      const pathRegex = '^' + this._prefix + dist +'/'
+      pathRewrite[pathRegex] = '/'
 
-      const proxy = httpProxyMiddleware({
+console.log('########################')
+console.log(dist)
+console.log(target)
+console.log(pathRewrite)
+console.log(HttpProxyMiddleware)
+console.log('########################')
+
+      let proxy = HttpProxyMiddleware({
         target
         , pathRewrite
         , changeOrigin: true // for vhosted sites, changes host header to match to target's host
         , logLevel: 'debug'
       })
     
-      // log.verbose('Proxy', 'mapping [%s] to [%s]', dist, target)
-      this._router.use('/' + dist + '/'
+      log.verbose('Proxy', 'mapping [%s] to [%s]', dist, target)
+      console.log(dist + ' : ' + target)
+      (this._router as any).use('/' + dist + '/'
                         , this.fixTrailingSlashes
                         , proxy
                       )
@@ -107,4 +125,4 @@ class GfRelay {
 
 }
 
-module.exports = GfRelay.default = GfRelay.GfRelay = GfRelay
+export { GfRelay }

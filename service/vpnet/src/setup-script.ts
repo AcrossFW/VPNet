@@ -1,4 +1,3 @@
-'use strict'
 /**
  * 
  * VPNet.io Web Service
@@ -6,8 +5,8 @@
  * https://github.com/acrossfw/vpnet
  * 
  */
-const fs  = require('fs')
-const { execSync }    = require('child_process')
+import * as fs from 'fs'
+import { execSync } from 'child_process'
 
 class SetupScript {
   constructor(gfwrt) {
@@ -88,7 +87,7 @@ class SetupScript {
   
   base64DropbearKey(sshKeyFile) {
     // this will throw if not exist
-    fs.accessSync(sshKeyFile, fs.F_OK)
+    fs.accessSync(sshKeyFile, (fs as any).F_OK)
 
     const bashScript = `
       set -euo pipefail;
@@ -156,5 +155,7 @@ class SetupScript {
   }
 }
 
-const ss = new SetupScript(1234)
-console.log(ss.generate())
+// const ss = new SetupScript(1234)
+// console.log(ss.generate())
+
+export { SetupScript }

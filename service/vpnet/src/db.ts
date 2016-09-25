@@ -6,8 +6,8 @@
  * https://github.com/acrossfw/vpnet
  * 
  */
-const Datastore = require('nedb')
-const config = require('./config')
+import * as Datastore from 'nedb'
+import { config } from './config'
 
 const db = new Datastore({
   filename: config.nedb()
@@ -25,15 +25,4 @@ var doc = {
   , infos: { name: 'nedb' }
 }
 
-const db = new Db()
-
-db.db().insert(doc, function (err, newDoc) {   // Callback is optional
-  if (err) {
-    console.log(err)
-  }
-  console.log(newDoc)
-  // newDoc is the newly inserted document, including its _id
-  // newDoc has no key called notToBeSaved since its value was undefined
-})
-
-module.exports = db
+export { db }

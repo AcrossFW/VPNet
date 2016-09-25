@@ -2,9 +2,10 @@
   "name": "vpnet-server",
   "version": "0.0.1",
   "description": "vpnet.io web service",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "start": "node ./bin/server.js",
+    "start": "ts-node ./bin/server",
+    "lint": "tslint {src,test}/**/*.ts",
     "test": "ava test"
   },
   "keywords": [
@@ -22,9 +23,12 @@
     "express": "^4.14.0",
     "http-proxy-middleware": "^0.17.1",
     "nedb": "^1.8.0",
-    "npmlog": "^4.0.0"
+    "npmlog": "^4.0.0",
+    "typescript": "^2.0.3",
+    "typings": "^1.4.0"
   },
   "devDependencies": {
-    "ava": "^0.16.0"
+    "ava": "^0.16.0",
+    "tslint": "^3.15.1"
   }
 }

@@ -1,0 +1,10 @@
+{
+  "globalDependencies": {
+    "express": "registry:dt/express#4.0.0+20160708185218",
+    "nedb": "registry:dt/nedb#0.0.0+20160505185910",
+    "node": "registry:dt/node#6.0.0+20160923124626"
+  },
+  "dependencies": {
+    "npmlog": "registry:npm/npmlog#2.0.3+20160429172249"
+  }
+}

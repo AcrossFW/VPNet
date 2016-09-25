@@ -1,4 +1,3 @@
-'use strict'
 /**
  * 
  * VPNet.io Web Service - Virtual Private Network Essential Toolbox
@@ -8,6 +7,11 @@
  */
  
 class Config {
+  _ip: string
+  _nedb: any
+  
+  port_web: number
+  
   constructor() {
     this.init()
   }
@@ -17,6 +21,7 @@ class Config {
                                       .execSync('curl -Ss ifconfig.io')
                                       .toString()
                                       .replace('\n', '')
+    this.port_web = process.env.PORT_WEB || 10080
     this._nedb = '/tmp/vpnet.nedb'
   }
      
@@ -25,16 +30,21 @@ class Config {
   nedb()      { return this._nedb }
 
   port(service = 'web') {
-    let portVar = 'PORT_' + service.toUpperCase()
-    const port = process.env[portVar]
-    if (!port) {
-      throw new Error(`port for ${service} not found on env var ${portVar}!`)
+    let port = this[`port_${service}`]
+    if (port) {
+      return port
     }
-    return port
+    
+    let portVar = 'PORT_' + service.toUpperCase()
+    port = process.env[portVar]
+    if (port) {
+      return port
+    }
+    throw new Error(`port for ${service} not found!`)
   }
 
 }
 
 const config = new Config
 
-module.exports = config
+export { config }

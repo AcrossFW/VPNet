@@ -1,4 +1,3 @@
-'use strict'
 /**
  * 
  * VPNet.io Web Service
@@ -6,13 +5,21 @@
  * https://github.com/acrossfw/vpnet
  * 
  */
-const fs  = require('fs') 
-const log = require('npmlog')
+import * as fs from 'fs'
+import * as log from 'npmlog'
 
-const config  = require('./config')
-const db      = require('./db')
+import { config } from './config'
+import { db } from './db'
 
 class GfWrt {
+  _uuid: string
+  _user: string
+  _name: string
+  _ip: string
+  _port: number
+  _key: string
+  _linklocal: string
+  
   constructor(userOrUuid) {
     log.verbose('GfWrt', 'constructor(%s)', userOrUuid)
     
@@ -55,7 +62,7 @@ class GfWrt {
     }
     
     const sshKeyFile = '/home/' + forUser + '/.ssh/id_rsa'
-    fs.accessSync(sshKeyFile, fs.F_OK)
+    fs.accessSync(sshKeyFile, (fs as any).F_OK)
     
     this._user  = forUser
     this._key   = sshKeyFile
@@ -86,7 +93,7 @@ class GfWrt {
           return reject(err)
         }
         // return resolve(doc)
-        return this
+        return resolve(this)
       })      
     })
   }
@@ -130,14 +137,15 @@ class GfWrt {
   ip()        { return this._ip }
   key()       { return this._key }
   linklocal() { return this._linklocal }
+  name()      { return this._name }
   port()      { return this._port }
   user()      { return this._user }
   uuid()      { return this._uuid }
 
-  static list(forUser) {
+  static list(forUser) : Promise<GfWrt[]>{
     log.verbose('GfWrt', 'list(%s)', forUser)
     
-    const query = {}
+    const query: any = {}
     if (forUser) {
       query.user = forUser
     }
@@ -154,7 +162,7 @@ class GfWrt {
 
   static guip() {
     return '169.254.x.y'.replace(/[xy]/g, _ => {
-      return Math.random()*255|0
+      return String(Math.random()*255|0)
     })
   }
   
@@ -168,5 +176,4 @@ class GfWrt {
 
 }
 
-  
-module.exports = GfWrt.default = GfWrt.GfWrt = GfWrt
+export { GfWrt }
