@@ -1,15 +1,15 @@
 'use strict'
 /**
  * 
- * VPNet.io Web Service - Virtual Private Network Essential Toolbox
- *
+ * VPNet.io Web Service
+ * Virtual Private Network Essential Toolbox
  * https://github.com/acrossfw/vpnet
  * 
  */
 const express             = require('express')
 const httpProxyMiddleware = require('http-proxy-middleware')
 
-const { Config, GfRelay, log } = require('../')
+const { Config, GfRelay, SetupScript, log } = require('../')
 
 const app     = express()
 
@@ -26,12 +26,14 @@ app.get('/', (req, res) => {
   res.send(`curl -sL http://${config.ip()}:${config.port()}/connect-gfwrt.sh | bash -`)
 })
 
-app.get('/connect-gfwrt.sh', (req, res) => {
-  let script
-  script = 'echo gfwrt setup fake done!'
+app.get('/setup.sh/:uuid', (req, res) => {
+  
+  const gfwrt = new GfWrt(req.params.uuid)
+  const script = new SetupScript(gfwrt)
+  
   // res.writeHead(200, { 'Content-Type': 'application/x-sh' })
   res.writeHead(200, { 'Content-Type': 'text/plain' })
-  res.write(script)
+  res.write(script.generate())
   res.end()
 })
 

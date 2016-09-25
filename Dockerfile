@@ -19,13 +19,13 @@ MAINTAINER AcrossFW <dev@acrossfw.com>
 
 #	module-init-tools \ operation not permitted inside docker
 RUN apt-get update -qq && apt-get -qqy install \
-    	apt-utils \
     	curl \
     	dnsutils \
     	inetutils-ping \
     	inetutils-traceroute \
     	iperf \
     	iptables \
+    	lua5.1 \
     	net-tools \
     	netcat \
     	nload \
