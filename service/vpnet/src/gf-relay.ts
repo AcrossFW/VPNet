@@ -73,13 +73,6 @@ class GfRelay {
       const pathRegex = '^' + this._prefix + dist +'/'
       pathRewrite[pathRegex] = '/'
 
-console.log('########################')
-console.log(dist)
-console.log(target)
-console.log(pathRewrite)
-console.log(HttpProxyMiddleware)
-console.log('########################')
-
       let proxy = HttpProxyMiddleware({
         target
         , pathRewrite
@@ -89,7 +82,7 @@ console.log('########################')
     
       log.verbose('Proxy', 'mapping [%s] to [%s]', dist, target)
       console.log(dist + ' : ' + target)
-      (this._router as any).use('/' + dist + '/'
+      ;(this._router as any).use('/' + dist + '/'
                         , this.fixTrailingSlashes
                         , proxy
                       )
