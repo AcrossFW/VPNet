@@ -11,6 +11,7 @@ import * as express from 'express'
 import {
   config
   , log 
+  , db
   
   , GfRelay
   , GfWrt
@@ -18,8 +19,9 @@ import {
 } from '../'
 
 const app = express()
-app.use((req,res) => {
+app.use((req, res, next) => {
   console.log('LOG: ' + req.url)
+  next()
 })
 
 const gfRelay = new GfRelay({
@@ -33,15 +35,28 @@ app.get('/', async (req, res) => {
   
   if (gfWrtList.length === 0) {
     res.write('gfWrtList empty for user vpnet, created one for you')
-    gfWrtList.push(new GfWrt('vpnet'))
+    const gfWrt = new GfWrt('vpnet')
+    gfWrtList.push(await gfWrt.ready())
   }
 
   for (let gfWrt of gfWrtList) {
-    res.write('<p>')
-    res.write(`curl -sL http://${config.ip()}:${config.port()}/setup.sh/${gfWrt.uuid()} | bash -\n\n`)
-    res.write('</p>')
+    res.write('<span>')
+    res.write(`curl -sL http://${config.ip()}:${config.port()}/setup.sh/${gfWrt.uuid()} | bash -`)
+    res.write('</span>')
   }
+  res.end()
+})
 
+app.get('/debug', (req, res) => {
+  db.gfwrt.find((err, docs) => {
+    if (err) {
+      res.send('error: ' + err)
+      return
+    }
+    
+    res.send('docs: ' + JSON.stringify(docs))
+    return
+  })
 })
 
 app.get('/setup.sh/:uuid', (req, res) => {

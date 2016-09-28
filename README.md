@@ -4,6 +4,8 @@ VPNet(Very Powerful Network Encryption Toolbox) is a modern, open source, strong
 
 We believe that the right of visiting free and open global internet is right that all people should enjoy – both technic and the non-technic people.
 
+[![](https://images.microbadger.com/badges/image/acrossfw/vpnet.svg)](https://microbadger.com/images/acrossfw/vpnet "Get your own image badge on microbadger.com")
+
 ## Story
 
 **U.S. Consulate request quotation for International Internet access service on Aug 2016.**

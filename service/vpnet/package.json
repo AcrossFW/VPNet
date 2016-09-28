@@ -6,7 +6,8 @@
   "scripts": {
     "start": "ts-node ./bin/server",
     "lint": "tslint {src,test}/**/*.ts",
-    "test": "ava test"
+    "test": "tap \"test/*.ts\"",
+    "test:ava": "ts-node $(which ava) \"test/*.ts\""
   },
   "keywords": [
     "vpnet",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "ava": "^0.16.0",
+    "tap": "^7.1.2",
     "tslint": "^3.15.1"
   }
 }

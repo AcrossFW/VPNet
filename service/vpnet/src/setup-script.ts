@@ -1,9 +1,9 @@
 /**
- * 
+ *
  * VPNet.io Web Service
  * Virtual Private Network Essential Toolbox
  * https://github.com/acrossfw/vpnet
- * 
+ *
  */
 import * as fs from 'fs'
 import { execSync } from 'child_process'
@@ -14,7 +14,7 @@ class SetupScript {
       throw new Error('gfwrt not defined')
     }
   }
-  
+
   /*
 3. setup ppp over ssh vpn form openwrt, with
 4. connect vpn
@@ -44,24 +44,24 @@ class SetupScript {
       # https://github.com/AcrossFW
       #
       # VPNet (Virtual Private Network Essential Toolbox)
-      # All in ONE, ZERO Configuration Solution for Tunnel Servers' setup 
+      # All in ONE, ZERO Configuration Solution for Tunnel Servers' setup
       # https://github.com/AcrossFW/VPNet
       #
       # gfWRT (Wireless RouTer for your Girl Friend)
       # Set it Once and Forget it Forever.
       # https://github.com/AcrossFW/gfWRT
       #
-      
+
     `
   }
-  
+
   scriptSetupUci() {
     return `
       ######################
       # scriptSetupUci
       ######################
       touch /etc/config/gfwrt
-      
+
       uci set gfwrt.vpnet='server'
       uci set gfwrt.vpnet.uuid='f9688e84-4ed6-4bfb-922b-f6c281a34d7d'
       # uci set gfwrt.vpnet.name='vpnet-0303'
@@ -72,11 +72,11 @@ class SetupScript {
       uci set gfwrt.vpnet.key='/etc/dropbear/vpnet-0303.key'
       uci commit
     `
-  }  
-  
+  }
+
   scriptSaveKey(sshKeyFile) {
     const base64Str = this.base64DropbearKey(sshKeyFile)
-    const luaDecoder = this.scriptLuaDecoder(base64Str) 
+    const luaDecoder = this.scriptLuaDecoder(base64Str)
     return `
       ######################
       # scriptSaveKey
@@ -84,7 +84,7 @@ class SetupScript {
       ${luaDecoder} > /etc/dropbear/vpnet-0303.key
     `
   }
-  
+
   base64DropbearKey(sshKeyFile) {
     // this will throw if not exist
     fs.accessSync(sshKeyFile, (fs as any).F_OK)
@@ -96,9 +96,9 @@ class SetupScript {
       base64 --wrap=0 "$KEY_FILE";
       rm "$KEY_FILE";
     `.replace(/[\n ]+/g, ' ')
-    
+
     // console.log(bashScript)
-    
+
     const base64Str = execSync(`bash -c '${bashScript}'`)
                         .toString()
     if (!base64Str) {
@@ -106,16 +106,16 @@ class SetupScript {
     }
     return base64Str
   }
-  
+
   scriptLuaDecoder(base64Str) {
     if (!base64Str) {
       throw new Error('no base64 string found')
     }
-    
+
     // http://lua-users.org/wiki/BaseSixtyFour
     let luaScript = `
       local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-      
+
       function dec(data)
           data = string.gsub(data, '[^'..b..'=]', '')
           return (data:gsub('.', function(x)
@@ -130,13 +130,13 @@ class SetupScript {
               return string.char(c)
           end))
       end
-      
+
       io.stdout:write(dec('${base64Str}'))
     `.replace(/[\n ]+/g, ' ')
-    
+
     return `lua -e "${luaScript}"`
   }
-  
+
   scriptConnectVpn() {
     return `
       ######################
@@ -158,4 +158,4 @@ class SetupScript {
 // const ss = new SetupScript(1234)
 // console.log(ss.generate())
 
-export { SetupScript }
+export default SetupScript

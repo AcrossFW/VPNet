@@ -1,28 +1,33 @@
 'use strict'
 /**
- * 
+ *
  * VPNet.io Web Service
  * Virtual Private Network Essential Toolbox
  * https://github.com/acrossfw/vpnet
- * 
+ *
  */
 import * as Datastore from 'nedb'
-import { config } from './config'
+import config from './config'
 
-const db = new Datastore({
-  filename: config.nedb()
-  , autoload: true
-})
+class Db {
+  _gfwrt: Datastore
 
-var doc = { 
-  hello: 'world'
-  , n: 5
-  , today: new Date()
-  , nedbIsAwesome: true
-  , notthere: null
-  , notToBeSaved: undefined  // Will not be saved
-  , fruits: [ 'apple', 'orange', 'pear' ]
-  , infos: { name: 'nedb' }
+  constructor() {
+    this.init()
+  }
+
+  init() {
+    this._gfwrt = new Datastore({
+      filename: config.db('gfwrt')
+      , autoload: true
+    })
+  }
+
+  gfwrt() {
+    return this._gfwrt
+  }
 }
 
-export { db }
+const db = new Db()
+
+export default db

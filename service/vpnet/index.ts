@@ -6,14 +6,15 @@
  * https://github.com/acrossfw/vpnet
  * 
  */
-import { GfRelay }      from './src/gf-relay'
-import { GfWrt }        from './src/gf-wrt'
-import { SetupScript }  from './src/setup-script'
+import GfRelay      from './src/gf-relay'
+import GfWrt        from './src/gf-wrt'
+import SetupScript  from './src/setup-script'
 
-import { config }       from './src/config'
+import db     from './src/db'
+import config from './src/config'
 
-import * as log from 'npmlog'
-// log.level = 'silly'
+const log = require('npmlog')
+log.level = 'silly'
 
 export {
   GfRelay
@@ -21,5 +22,6 @@ export {
   , SetupScript
   
   , config
+  , db
   , log
 }
