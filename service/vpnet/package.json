@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node ./bin/server",
     "lint": "tslint {src,test}/**/*.ts",
+    "pretest": "npm run lint",
     "test": "tap \"test/*.ts\"",
     "test:ava": "ts-node $(which ava) \"test/*.ts\""
   },
