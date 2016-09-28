@@ -31,7 +31,9 @@ class Config {
 
   db(name = 'gfwrt') {
     if (!this._nedbMap[name]) {
-      throw new Error('db name not found: ' + name)
+      const e = new Error('db name not found: ' + name)
+      log.error('Config', 'db() exception: %s', e)
+      throw e
     }
     return this._nedbMap[name]
   }
@@ -51,7 +53,23 @@ class Config {
     if (port) {
       return port
     }
-    throw new Error(`port for ${service} not found!`)
+    const e = new Error(`port for ${service} not found!`)
+    log.error('Config', 'port() exception: %s', e)
+    throw e
+  }
+
+  guip(): string {
+    return '169.254.x.y'.replace(/[xy]/g, _ => {
+      return String(Math.random() * 255 | 0)
+    })
+  }
+
+  guid(): string {
+    // http://stackoverflow.com/a/2117523/1123955
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8)
+      return v.toString(16)
+    })
   }
 
 }

@@ -12,21 +12,18 @@ import * as fs from 'fs'
 import config from './config'
 import db     from './db'
 
-type GfWrtDoc = {
-  _id:          string
-  , linklocal:  string
-  , user:       string
+type GfWrtSetting = {
+  _id:          string  // UUID
+  , ip:         string  // VPNet IP
+  , key:        string  // VPNet ssh private key
+  , linklocal:  string  // GfWrt internal IP
+  , name:       string  // VPNet name
+  , port:       number  // VPNet ssh port
+  , user:       string  // VPNet user
 }
 
 class GfWrt {
-  _uuid: string
-  _user: string
-  _name: string
-  _ip: string
-  _port: number
-  _key: string
-  _linklocal: string
-
+  setting: GfWrtSetting
   _db = db.gfwrt()
 
   constructor(userOrUuid: string) {
@@ -34,148 +31,141 @@ class GfWrt {
 
     if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userOrUuid)) {
       // http://stackoverflow.com/a/13653180/1123955
-      this._uuid = userOrUuid
+      this.setting._id = userOrUuid
     } else if (userOrUuid) {
-      this._user = userOrUuid
+      this.setting.user = userOrUuid
     } else {
-      throw new Error('userOrUuid not found')
+      const e = new Error('userOrUuid not found')
+      log.error('GfWrt', 'constructor() exception: %s', e)
+      throw e
     }
-
-    // this._db = db.gfwrt()
   }
 
-  ready() {
+  async ready(): Promise<GfWrt> {
     log.verbose('GfWrt', 'ready()')
+
     if (this.valid()) {
       log.silly('GfWrt', 'ready() HIT')
-      return Promise.resolve(this)
+      return this
     }
+
     log.silly('GfWrt', 'ready() MISS')
 
-    this._name = config.hostname()
-    this._ip   = config.ip()
-    this._port = config.port('ssh')
-
-    if (this._uuid) {
-      return this.loadUuid(this._uuid)
-    } else if (this._user) {
-      return this.createUuid(this._user)
-    }
-  }
-
-  valid() {
-    return !!(this._uuid && this._user)
-  }
-
-  sshKeyFile(user) {
-    const sshKeyFile = '/home/' + user + '/.ssh/id_rsa'
-    fs.accessSync(sshKeyFile, (fs as any).F_OK)
-    return sshKeyFile
-  }
-
-  async createUuid(forUser) {
-    log.verbose('GfWrt', 'createUuid(%s)', forUser)
-
-    if (!/^[\w\d-_\.]+$/.test(forUser)) {
-      throw new Error('not a valid user to creat: ' + forUser)
+    if (this.setting._id) {
+      return this.loadUuid(this.setting._id)
+    } else if (this.setting.user) {
+      return this.createUuid(this.setting.user)
     }
 
-    this._user  = forUser
-    this._key   = this.sshKeyFile(forUser)
-
-    this._linklocal = GfWrt.guip()
-    this._uuid      = GfWrt.guid()
-
-    await this.save()
-    return this
+    const e = new Error('neither uuid nor user?')
+    log.error('GfWrt', 'ready() exception: %s', e)
+    throw e
   }
 
-  save() {
+  async createUuid(user): Promise<GfWrt> {
+    log.verbose('GfWrt', 'createUuid(%s)', user)
+
+    try {
+      this.setting.key =this.sshKey(user)
+    } catch (e) {
+      log.error('GfWrt', 'createUuid() not a valid user to creat: ' + user)
+      throw e
+    }
+
+    this.setting._id        = config.guid()
+
+    this.setting.ip         = config.ip()
+    this.setting.linklocal  = config.guip()
+    this.setting.name       = config.hostname()
+    this.setting.port       = config.port('ssh')
+    this.setting.user       = user
+
+    return this.save()
+  }
+
+  async save(): Promise<GfWrt> {
     log.verbose('GfWrt', 'save()')
 
     if (!this.valid()) {
       return Promise.reject(new Error('not valid for save'))
     }
 
+    const query   = { _id: this.setting._id }
+    const update  = this.setting
+    const options = { upsert: true }
+
     return new Promise((resolve, reject) => {
-      this._db.insert({
-        _id: this.uuid()
-        , ip: this.ip()
-        , port: this.port()
-        , name: this.name()
-        , linklocal: this.linklocal()
-        , key: this.key()
-      }, (err, doc) => {
+      this._db.update(query, update, options, (err, numReplaced) => {
         if (err) {
           return reject(err)
+        } else if (numReplaced < 1) {
+          const e = new Error('numReplaced < 1')
+          log.error('GfWrt', 'save() %s', e)
+          return reject(e)
         }
-        // return resolve(doc)
         return resolve(this)
       })
     })
   }
 
-  remove(): Promise<number> {
-    log.verbose('GfWrt', 'remove()')
-    return new Promise((resolve, reject) => {
-      this._db.remove({
-          _id: this.uuid()
-        }
-        , {}
-        , (err, numRemoved) => {
-          if (err) {
-            reject(err)
-          } else {
-            console.log('numRemoved:' + numRemoved)
-            this._uuid = null
-            resolve(numRemoved)
-          }
-        }
-      )
-    })
-  }
+  async remove(): Promise<number> {
+    log.verbose('GfWrt', 'remove() with id %s', this.setting._id)
 
-  loadUuid(uuid): Promise<GfWrt> {
-    log.verbose('GfWrt', 'loadUuid(%s', uuid)
+    const query = { _id: this.setting._id }
 
     return new Promise((resolve, reject) => {
-      this._db.findOne({_id: uuid}, (err, doc: GfWrtDoc) => {
+      this._db.remove(query, {}, (err, numRemoved) => {
         if (err) {
           return reject(err)
         }
+        console.log('numRemoved:' + numRemoved)
+        this.setting._id = null
+        return resolve(numRemoved)
+      })
+    })
+  }
 
-        if (!doc) {
+  async loadUuid(uuid): Promise<GfWrt> {
+    log.verbose('GfWrt', 'loadUuid(%s)', uuid)
+
+    const query = { _id: uuid }
+
+    return new Promise((resolve, reject) => {
+      this._db.findOne(query, (err, doc: GfWrtSetting) => {
+        if (err) {
+          return reject(err)
+        } else if (!doc) {
           return reject(new Error('uuid not found: ' + uuid))
         }
 
-        this._uuid      = doc._id
-        this._user      = doc.user
-        this._linklocal = doc.linklocal
+        this.setting = doc
 
-        this._key       = this.sshKeyFile(doc.user)
+console.log('#############')
+console.log(doc)
 
         return resolve(this)
       })
     })
   }
 
-  ip()        { return this._ip }
-  key()       { return this._key }
-  linklocal() { return this._linklocal }
-  name()      { return this._name }
-  port()      { return this._port }
-  user()      { return this._user }
-  uuid()      { return this._uuid }
+  ip()        { return this.setting.ip }
+  key()       { return this.setting.key }
+  linklocal() { return this.setting.linklocal }
+  name()      { return this.setting.name }
+  port()      { return this.setting.port }
+  user()      { return this.setting.user }
+  uuid()      { return this.setting._id }
 
-  static list(forUser): Promise<GfWrt[]> {
-    log.verbose('GfWrt', 'list(%s)', forUser)
+  static async list(user: string = null): Promise<GfWrt[]> {
+    log.verbose('GfWrt', 'list(%s)', user)
 
     const query: any = {}
-    if (forUser) {
-      query.user = forUser
+    if (user) {
+      query.user = user
     }
+
     return new Promise((resolve, reject) => {
-      db.gfwrt().find(query, (err, docs: GfWrtDoc[]) => {
+      db.gfwrt().find(query, (err, docs: GfWrtSetting[]) => {
         if (err) {
           return reject(err)
         }
@@ -185,18 +175,19 @@ class GfWrt {
     })
   }
 
-  static guip(): string {
-    return '169.254.x.y'.replace(/[xy]/g, _ => {
-      return String(Math.random() * 255 | 0)
-    })
+  valid(): boolean {
+    return !!(this.setting._id && this.setting.user)
   }
 
-  static guid(): string {
-    // http://stackoverflow.com/a/2117523/1123955
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8)
-      return v.toString(16)
-    })
+  sshKey(user): string {
+    const sshKeyFile = '/home/' + user + '/.ssh/id_rsa'
+    try {
+      fs.accessSync(sshKeyFile, (fs as any).F_OK)
+    } catch (e) {
+      log.error('GfWrt', 'sshKey() exception: %s', e)
+      throw e
+    }
+    return fs.readFileSync(sshKeyFile).toString()
   }
 
 }

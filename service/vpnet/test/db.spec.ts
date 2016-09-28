@@ -1,10 +1,10 @@
 #!/usr/bin/env ts-node
 /**
- * 
+ *
  * VPNet.io Web Service - Virtual Private Network Essential Toolbox
  *
  * https://github.com/acrossfw/vpnet
- * 
+ *
  */
 const { test } = require('tap')
 

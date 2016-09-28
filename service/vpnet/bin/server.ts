@@ -31,20 +31,25 @@ const gfRelay = new GfRelay({
 app.use(gfRelay.prefix(), gfRelay.router())
 
 app.get('/', async (req, res) => {
-  const gfWrtList = await GfWrt.list('vpnet') || []
+  try {
+    const gfWrtList = await GfWrt.list('vpnet') || []
 
-  if (gfWrtList.length === 0) {
-    res.write('gfWrtList empty for user vpnet, created one for you')
-    const gfWrt = new GfWrt('vpnet')
-    gfWrtList.push(await gfWrt.ready())
-  }
+    if (gfWrtList.length === 0) {
+      res.write('gfWrtList empty for user vpnet, created one for you')
+      const gfWrt = new GfWrt('vpnet')
 
-  for (let gfWrt of gfWrtList) {
-    res.write('<span>')
-    res.write(`curl -sL http://${config.ip()}:${config.port()}/setup.sh/${gfWrt.uuid()} | bash -`)
-    res.write('</span>')
+      gfWrtList.push(await gfWrt.ready())
+    }
+
+    for (let gfWrt of gfWrtList) {
+      res.write('<span>')
+      res.write(`curl -sL http://${config.ip()}:${config.port()}/setup.sh/${gfWrt.uuid()} | bash -`)
+      res.write('</span>')
+    }
+    res.end()
+  } catch (e) {
+    log.error('Server', 'get / exception: %s', e)
   }
-  res.end()
 })
 
 app.get('/debug', (req, res) => {
