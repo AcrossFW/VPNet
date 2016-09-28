@@ -1,18 +1,18 @@
 'use strict'
 /**
- * 
+ *
  * VPNet.io Web Service
  * Virtual Private Network Essential Toolbox
  * https://github.com/acrossfw/vpnet
- * 
+ *
  */
 import * as express from 'express'
 
 import {
   config
-  , log 
+  , log
   , db
-  
+
   , GfRelay
   , GfWrt
   , SetupScript
@@ -32,7 +32,7 @@ app.use(gfRelay.prefix(), gfRelay.router())
 
 app.get('/', async (req, res) => {
   const gfWrtList = await GfWrt.list('vpnet') || []
-  
+
   if (gfWrtList.length === 0) {
     res.write('gfWrtList empty for user vpnet, created one for you')
     const gfWrt = new GfWrt('vpnet')
@@ -48,19 +48,19 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/debug', (req, res) => {
-  db.gfwrt.find((err, docs) => {
+  db.gfwrt().find((err, docs) => {
     if (err) {
       res.send('error: ' + err)
       return
     }
-    
+
     res.send('docs: ' + JSON.stringify(docs))
     return
   })
 })
 
 app.get('/setup.sh/:uuid', (req, res) => {
-  
+
   const gfwrt = new GfWrt(req.params.uuid)
   gfwrt.ready()
       .then(_ => {

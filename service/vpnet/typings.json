@@ -1,10 +1,12 @@
 {
   "globalDependencies": {
     "express": "registry:dt/express#4.0.0+20160708185218",
+    "express-serve-static-core": "registry:dt/express-serve-static-core#4.0.0+20160923124352",
     "nedb": "registry:dt/nedb#0.0.0+20160505185910",
     "node": "registry:dt/node#6.0.0+20160923124626"
   },
   "dependencies": {
-    "npmlog": "registry:npm/npmlog#2.0.3+20160429172249"
+    "npmlog": "registry:npm/npmlog#2.0.3+20160429172249",
+    "serve-static": "registry:npm/serve-static#1.11.1+20160810053450"
   }
 }

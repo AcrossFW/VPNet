@@ -1,8 +1,11 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es2015",
-        "noImplicitAny": false,
-        "sourceMap": false
-    }
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2015",
+    "noImplicitAny": false,
+    "sourceMap": false
+  }
+  ,"files": [
+    "typings/index.d.ts"
+  ]
 }
