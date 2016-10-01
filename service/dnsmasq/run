@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#
+# VPNet.io - Virtual Private Network Essential Toolbox
+#
+# https://github.com/acrossfw/vpnet
+#
+# inspired by https://hub.docker.com/r/vimagick/shadowsocks-libev/
+#
+# DnsMasq
+#
+source "$ACROSSFW_HOME/vpnet-functions.sh"
+vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
+
+main() {
+  dnsmasq_cmd='/usr/sbin/dnsmasq'
+  exec $dnsmasq_cmd \
+    --keep-in-foreground \
+    -x /var/run/dnsmasq/dnsmasq.pid \
+    -u dnsmasq \
+    -7 /etc/dnsmasq.d,.dpkg-dist,.dpkg-old,.dpkg-new \
+    --local-service \
+    --trust-anchor=.,19036,8,2,49AAC11D7B6F6446702E54A1607371607A1A41855200FD2CE1CDDE32F24E8FB5
+
+  echo "ERROR: exec dnsmasq exited with error code $?"
+  sleep 1
+  exit -1
+}
+
+main "$@"
