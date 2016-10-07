@@ -31,7 +31,7 @@ vpnet::init_bash() {
 vpnet::init_env_var() {
   if vpnet::is_docker ; then
     source "$ACROSSFW_HOME/ENV.build"
-    
+
     [[ -f "$ACROSSFW_HOME/ENV.config" ]] && {
       source "$ACROSSFW_HOME/ENV.config"
     }
@@ -45,18 +45,18 @@ vpnet::init_host_id() {
   local id=$(ip addr show eth0 | grep ether | awk '{print $2}' | awk -F: '{print $5$6}')
   HOSTNAME=${HOSTNAME/vpnet./vpnet-$id.}
 }
-  
+
 vpnet::check_env() {
   [[ "$(id -u)" = 0 ]] || {
     echo "ERROR: must run as root"
     return -1
   }
-  
+
   [[ "${ACROSSFW_HOME}" ]] || {
     echo "ERROR: ACROSSFW_HOME environment variable not defined"
     return -1
   }
-  
+
   return 0
 }
 
@@ -66,7 +66,7 @@ vpnet::init_config() {
     vpnet::log "ERROR: vpnet::init_config need absolute filename start with '/'"
     return -1
   }
-  
+
   #
   # $__dir is the magic variable set by init_bash
   # standard for the script execute dir
@@ -76,25 +76,25 @@ vpnet::init_config() {
     vpnet::log "ERROR: vpnet::init_config cant find '$template_file'! must run in 'service/SRV/run'"
     return -1
   }
-  
+
   vpnet::is_docker || {
     vpnet::log "ERROR: vpnet::init_config can only run inside docker(or it will overwrite root filesystem)"
     exit -1
   }
-  
+
   echo "vpnet::init_config initing $config_file from $template_file ..."
   # Templating with Linux in a Shell Script
   # http://serverfault.com/a/699377/276381
   template="$(cat "${template_file}")"
   eval "echo \"${template}\"" > "$config_file"
 }
- 
+
 vpnet::is_docker() {
   # XXX simulate docker for test
   # return 0
-  
+
   # http://stackoverflow.com/a/20012536/1123955
-  if [[ $(head -1 /proc/1/cgroup) =~ /$ ]]; then
+  if [[ $(sort -n /proc/1/cgroup | head -1) =~ /$ ]]; then
     # end with '/', should be the host
     return -1
   else
@@ -111,10 +111,10 @@ vpnet::init_system() {
   # XXX: this will not work in --net=host mode
   # https://github.com/docker/docker/issues/5708
   hostname "$HOSTNAME" || echo "WARN: set hostname fail"
-  
+
   echo "Disabling coredump ..."
-  sysctl fs.suid_dumpable=0 
-  ulimit -S -c 0 
+  sysctl fs.suid_dumpable=0
+  ulimit -S -c 0
   echo "* hard core 0" >> /etc/security/limits.conf
 }
 
@@ -125,13 +125,13 @@ vpnet::init_network() {
   sysctl net.ipv6.conf.all.forwarding=1   || echo "WARN: sysctl fail"
   sysctl net.ipv6.conf.all.proxy_ndp=1    || echo "WARN: sysctl fail"
   echo 1 > /proc/sys/net/ipv4/route/flush || echo "WARN: sysctl fail"
-  
+
   # XXX does there always be `eth0` in docker ???
   echo "Setting network filter ..."
   iptables -t nat -A POSTROUTING -s 10.0.0.0/8      -o eth0 -j MASQUERADE || echo "WARN: iptables fail"
   iptables -t nat -A POSTROUTING -s 172.16.0.0/12   -o eth0 -j MASQUERADE || echo "WARN: iptables fail"
   iptables -t nat -A POSTROUTING -s 192.168.0.0/16  -o eth0 -j MASQUERADE || echo "WARN: iptables fail"
-  
+
   # ip6tables -t nat -A POSTROUTING -s 2a00:1450:400c:c05::/64 -o eth0 -j MASQUERADE
 
   # XXX no need ? iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
@@ -150,7 +150,7 @@ vpnet::get_user_home() {
 
   local __user_home
   local error_code
-  
+
   __user_home=$(eval echo ~"$user_name")
   error_code=0
 
@@ -180,7 +180,7 @@ vpnet::get_user_home() {
 vpnet::set_var_value() {
   local __resultvar=$1
   local __value=$2
-  
+
   if [[ "$__resultvar" = "__resultvar" || "$__resultvar" = "__value" ]]; then
     vpnet::log "ERROR: vpnet::set_var_value reserved name: __resultvar & __value"
     return -1
