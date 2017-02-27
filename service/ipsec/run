@@ -15,7 +15,7 @@ main() {
   vpnet::init_config /etc/ipsec.conf
   vpnet::init_config /etc/ndppd.conf
   vpnet::init_config /etc/strongswan.conf
-  
+
   ipsec::init_network
   ipsec::run
 }
@@ -36,14 +36,16 @@ ipsec::run() {
     SHARED_SECRET="123$(openssl rand -base64 32 2>/dev/null)"
     echo ": PSK \"${SHARED_SECRET}\"" > /etc/ipsec.secrets
   }
-  
+
   # hotfix for https://github.com/gaomd/docker-ikev2-vpn-server/issues/7
   rm -f /var/run/starter.charon.pid
-  
+
   service ndppd start
   # http://wiki.loopop.net/doku.php?id=server:vpn:strongswanonopenvz
+
+  # shellcheck disable=SC2093
   exec /usr/sbin/ipsec start --nofork
-  
+
   echo "ERROR: ipsec::run exec ipsec exit with error code $?"
   sleep 1
   exit -1

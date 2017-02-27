@@ -7,9 +7,10 @@
 source "$ACROSSFW_HOME/vpnet-functions.sh"
 vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
-while [ true ]; do
-    # npm start
-    echo "by pass node temprorary"
-    echo "ERROR: npm start exit with error code $?" >&2
-    sleep 1
+n=0 # n++ will cause bash exit, because return 0 (???)
+while [[ $((++n)) ]]; do
+  # npm start
+  echo "by pass node temprorary"
+  echo "ERROR: npm start exit with error code $?" >&2
+  sleep 1
 done

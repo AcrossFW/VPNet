@@ -13,6 +13,8 @@ vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
 main() {
   dnsmasq_cmd='/usr/sbin/dnsmasq'
+
+  # shellcheck disable=SC2093
   exec $dnsmasq_cmd \
     --keep-in-foreground \
     -x /var/run/dnsmasq/dnsmasq.pid \

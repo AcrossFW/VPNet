@@ -17,9 +17,8 @@ main() {
   ssh::init_user
   ssh::init_authorized_keys
 
-  n=0
-  while [[ true ]]; do
-    ((++n)) # n++ will cause bash exit, because return 0 (???)
+  n=0 # n++ will cause bash exit, because return 0 (???)
+  while [[ $((++n)) ]]; do
     echo "SSH: Heartbeat #$n ... "
     sleep 60
   done
@@ -48,11 +47,11 @@ ssh::init_authorized_keys() {
   }
 }
 
-ssh::init_admin() {  
+ssh::init_admin() {
   ADD_USER_HOME="/home/$ADMIN_NAME"
   ADD_USER_NAME="$ADMIN_NAME"
   ADD_USER_PASS="$ADMIN_PASS"
-  
+
   echo "ssh::init_admin Create user home if not exist ... "
   [[ -d "$ADD_USER_HOME" ]] || {
     adduser --quiet --disabled-password -shell /bin/bash --home "$ADD_USER_HOME" --gecos "$ADD_USER_NAME" "$ADD_USER_NAME"
