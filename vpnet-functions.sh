@@ -18,43 +18,53 @@ vpnet::init_bash() {
   local source=$1
   if [[ -z "$source" ]]; then
     echo "ERROR: vpnet::init_bash must have BASH_SOURCE[0] as arg1"
-    return -1
+    return 1
   fi
 
   # Set magic variables for current file & dir
-  declare -gx __dir="$(cd "$(dirname "$source}")" && pwd)"
-  declare -gx __file="${__dir}/$(basename "${source}")"
-  declare -gx __base="$(basename "${__file}" .sh)"
-  declare -gx __root="${ACROSSFW_HOME:-/acrossfw}" # "$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
+  declare -gx __dir
+  declare -gx __file
+  declare -gx __base
+  declare -gx __root
+
+  __dir="$(cd "$(dirname "$source}")" && pwd)"
+  __file="${__dir}/$(basename "${source}")"
+  __base="$(basename "${__file}" .sh)"
+  __root="${ACROSSFW_HOME:-/acrossfw}" # "$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
 }
 
 vpnet::init_env_var() {
   if vpnet::is_docker ; then
+    # shellcheck disable=SC1090
     source "$ACROSSFW_HOME/ENV.build"
 
     [[ -f "$ACROSSFW_HOME/ENV.config" ]] && {
+      # shellcheck disable=SC1090
       source "$ACROSSFW_HOME/ENV.config"
     }
   fi
-  declare -gx WANIP=$(curl -Ss ifconfig.io)
+
+  declare -gx WANIP
+  WANIP=$(curl -Ss ifconfig.io)
 
   vpnet::init_host_id
 }
 
 vpnet::init_host_id() {
-  local id=$(ip addr show eth0 | grep ether | awk '{print $2}' | awk -F: '{print $5$6}')
+  local id
+  id=$(ip addr show eth0 | grep ether | awk '{print $2}' | awk -F: '{print $5$6}')
   HOSTNAME=${HOSTNAME/vpnet./vpnet-$id.}
 }
 
 vpnet::check_env() {
   [[ "$(id -u)" = 0 ]] || {
     echo "ERROR: must run as root"
-    return -1
+    return 1
   }
 
   [[ "${ACROSSFW_HOME}" ]] || {
     echo "ERROR: ACROSSFW_HOME environment variable not defined"
-    return -1
+    return 1
   }
 
   return 0
@@ -64,7 +74,7 @@ vpnet::init_config() {
   config_file=$1
   [[ "$config_file" =~ ^/ ]] || {
     vpnet::log "ERROR: vpnet::init_config need absolute filename start with '/'"
-    return -1
+    return 1
   }
 
   #
@@ -74,12 +84,12 @@ vpnet::init_config() {
   template_file="${__dir}/root${config_file}"
   [ -f "$template_file" ] || {
     vpnet::log "ERROR: vpnet::init_config cant find '$template_file'! must run in 'service/SRV/run'"
-    return -1
+    return 1
   }
 
   vpnet::is_docker || {
     vpnet::log "ERROR: vpnet::init_config can only run inside docker(or it will overwrite root filesystem)"
-    exit -1
+    exit 1
   }
 
   echo "vpnet::init_config initing $config_file from $template_file ..."
@@ -96,7 +106,7 @@ vpnet::is_docker() {
   # http://stackoverflow.com/a/20012536/1123955
   if [[ $(sort -n /proc/1/cgroup | head -1) =~ /$ ]]; then
     # end with '/', should be the host
-    return -1
+    return 1
   else
     # end with container string, should insdie docker
     return 0
@@ -144,7 +154,7 @@ vpnet::get_user_home() {
   case $__resultvar in
     '__resultvar'|'__user_home'|'user_name'|'error_code')
       vpnet::log "ERROR: vpnet::get_user_home __user_home is reserved by this function"
-      return -1
+      return 1
       ;;
   esac
 
@@ -157,7 +167,7 @@ vpnet::get_user_home() {
   # non-exist user will not resolve and keep the origin string, which has a leading '~'
   [[ "$__user_home" =~ ^~ ]] && {
     vpnet::log "ERROR: vpnet::get_user_home can not find home for user: %s" "$user_name"
-    error_code=-1 # no such user
+    error_code=1 # no such user
   }
 
   case "${#@}" in
@@ -169,7 +179,7 @@ vpnet::get_user_home() {
       ;;
     *)
       vpnet::log "ERROR: vpnet::get_user_home should take 1 or 2 args"
-      error_code=-1
+      error_code=1
       ;;
   esac
 
@@ -183,7 +193,7 @@ vpnet::set_var_value() {
 
   if [[ "$__resultvar" = "__resultvar" || "$__resultvar" = "__value" ]]; then
     vpnet::log "ERROR: vpnet::set_var_value reserved name: __resultvar & __value"
-    return -1
+    return 1
   fi
   # declare global variable http://stackoverflow.com/q/9871458/1123955
   eval "$__resultvar='$__value'"

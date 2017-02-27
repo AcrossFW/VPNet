@@ -14,7 +14,7 @@ test:
   override:
     - docker --version
     - docker info
-    - docker run -ti -v "$(pwd)":/mnt nlknguyen/alpine-shellcheck bin/*.sh
+    - docker run -ti -v "$(pwd)":/mnt nlknguyen/alpine-shellcheck vpnet-functions.sh bin/*.sh
     - ./script/docker.sh build
     - ./script/docker.sh test
 
