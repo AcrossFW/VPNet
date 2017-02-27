@@ -116,6 +116,7 @@ class GfWrt {
     return new Promise((resolve, reject) => {
       this._db.remove(query, {}, (err, numRemoved) => {
         if (err) {
+          log.error('GfWrt', 'remove() error: %s', err)
           return reject(err)
         }
         console.log('numRemoved:' + numRemoved)
