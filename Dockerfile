@@ -11,6 +11,8 @@
 FROM phusion/baseimage:0.9.19
 MAINTAINER AcrossFW <dev@acrossfw.com>
 
+ENV DEBIAN_FRONTEND noninteractive
+
 #
 #
 # START HEADER - VPNet.io System Init
@@ -20,11 +22,13 @@ MAINTAINER AcrossFW <dev@acrossfw.com>
 #	module-init-tools \ operation not permitted inside docker
 RUN apt-get update -qq && apt-get -qqy install \
     	curl \
+    	dnsmasq \
     	dnsutils \
     	inetutils-ping \
     	inetutils-traceroute \
     	iperf \
     	iptables \
+    	lsof \
     	lua5.1 \
     	net-tools \
     	netcat \
@@ -81,7 +85,7 @@ COPY service/vpnet/package.json service/vpnet/
 
 RUN cd service/vpnet \
   && npm install
-  
+
 #
 #
 # END HEADER - VPNet.io
@@ -102,7 +106,7 @@ EXPOSE ${PORT_SSH}/tcp
 # RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 RUN rm -f /etc/service/sshd/down \
     && ln -s ${ACROSSFW_HOME}/service/ssh /service/ssh
-    
+
 ENV SSH_AUTHORIZED_KEYS "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6GRsnNc1judMmIFeYzu02KbkkWW0mkrOusAe1kdEW9MeXIgq4cOjMMYHGHLxQR+WU4/yexpKdBlDUNSJiw7uSTyGl0ORwwKZfAeMlaFWRCtIrPh1DBugjZQKcAxoKaMeH2lzHIj5H/tCrgyjmQ6foUG70cKFQFtp6+aSURr1Oj12mQGD/JsfTRw2nnLdDA7TEV9SmhThliu7voq/u50doZjutFmASQVJJ+QD2jISyc7DGudVoQWNqsy6fJyHqnFKWpvlLMw22MgXOJEKpGS616jHGLqwvCCFghSl2+Dh3XVkhtL5WV9mU0dyqcesr347TH7FtVwufhI7yArU7+qin dev@acrossfw.com"
 
 #
@@ -111,11 +115,11 @@ ENV SSH_AUTHORIZED_KEYS "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6GRsnNc1judMmIFe
 
 #
 # START IPSEC
-# 
+#
 
 # Inspired by https://github.com/gaomd/docker-ikev2-vpn-server/blob/master/Dockerfile
 #
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
+RUN apt-get update && apt-get -y install \
       iptables \
       ndppd \
       openssl \
@@ -144,7 +148,7 @@ EXPOSE 1723/tcp
 #
 # inspired by https://github.com/vimagick/dockerfiles/tree/master/pptpd
 #
-# `rm pptpd.postinst` is a workaround of `no bus` error with systemd 
+# `rm pptpd.postinst` is a workaround of `no bus` error with systemd
 RUN apt-get update -qq && apt-get install -qqy \
       pptpd \
       || true \
