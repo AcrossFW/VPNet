@@ -66,7 +66,7 @@ class GfWrt {
     log.verbose('GfWrt', 'createUuid(%s)', user)
 
     try {
-      this.setting.key =this.sshKey(user)
+      this.setting.key = this.sshKey(user)
     } catch (e) {
       log.error('GfWrt', 'createUuid() not a valid user to creat: ' + user)
       throw e

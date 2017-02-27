@@ -21,6 +21,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 #	module-init-tools \ operation not permitted inside docker
 RUN apt-get update -qq && apt-get -qqy install \
+      apt-utils \
     	curl \
     	dnsmasq \
     	dnsutils \
@@ -75,7 +76,7 @@ RUN ln -s /etc/service /service \
 #
 # Node.JS
 #
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - \
   && apt-get install -qqy nodejs
 
 ENV PORT_WEB 10080
@@ -191,10 +192,11 @@ ENV SHADOWSOCKS_ENCRYPT_METHOD aes-256-cfb
 
 # inspired by https://hub.docker.com/r/vimagick/shadowsocks-libev/
 #
-RUN curl -s http://shadowsocks.org/debian/1D27208A.gpg | apt-key add - \
-	  && echo "deb http://shadowsocks.org/debian wheezy main" > /etc/apt/sources.list.d/shadowsocks.list \
-	  && apt-get update -qq && apt-get install -qqy \
-      shadowsocks-libev \
+
+#curl -s http://shadowsocks.org/debian/1D27208A.gpg | apt-key add - \
+#	  && echo "deb http://shadowsocks.org/debian wheezy main" > /etc/apt/sources.list.d/shadowsocks.list \
+RUN apt-get update -qq && apt-get install -qqy \
+      shadowsocks \
     && ln -s ${ACROSSFW_HOME}/service/shadowsocks /service/shadowsocks \
     \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
