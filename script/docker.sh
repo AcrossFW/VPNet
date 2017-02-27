@@ -185,8 +185,7 @@ builder::lint() {
   file_list=$(find . -type f -name "*.sh" -o -name "run")
   for file in $file_list; do
     [[ "$file" =~ node_modules ]] && continue
-    shellcheck "$file" || ret_code=$?
-    bash -n "$file" || ret_code=$?
+    bash -n "$file" && shellcheck "$file" || ret_code=$?
   done
 
   if [[ "$ret_code" = 0 ]]; then
