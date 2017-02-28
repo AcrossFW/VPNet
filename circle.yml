@@ -15,6 +15,7 @@ test:
     - docker --version
     - docker info
     - docker run -ti -v "$(pwd)":/mnt nlknguyen/alpine-shellcheck vpnet-functions.sh bin/*.sh
+    - ./script/docker.sh lint
     - ./script/docker.sh build
     - ./script/docker.sh test
 

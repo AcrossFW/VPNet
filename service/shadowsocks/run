@@ -12,7 +12,11 @@ source "$ACROSSFW_HOME/vpnet-functions.sh"
 vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
 main() {
-  ss_cmd=ss-server
+  # shadowsocks-libev
+  # ss_cmd=ss-server
+
+  # shadowsocks (installed by apt-get install shadowsocks)
+  ss_cmd=ssserver
 
   # shellcheck disable=SC2093
   exec $ss_cmd -s 0.0.0.0 \
@@ -20,9 +24,11 @@ main() {
   	-k "${ADMIN_PASS:-vpnet.io}" \
   	-m "${SHADOWSOCKS_ENCRYPT_METHOD:-aes-256-cfb}" \
   	-t 300 \
-  	--fast-open \
-  	-d "${DNS:-8.8.8.8}" \
-  	-u
+  	--fast-open
+
+  	# the following parameters is only worked for shadowsocks-libev
+  	# -d "${DNS:-8.8.8.8}" \
+  	# -u
 
   echo "ERROR: exec shadowsocks exited with error code $?"
   sleep 1
