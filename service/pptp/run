@@ -5,6 +5,8 @@
 #
 # pptp
 #
+
+# shellcheck disable=SC1090
 source "$ACROSSFW_HOME/vpnet-functions.sh"
 vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
@@ -13,7 +15,7 @@ main() {
   vpnet::init_config /etc/ppp/pptpd-options
 
   pptp::init_user
-  
+
   pptp::exec
 
   error_code=$?

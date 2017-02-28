@@ -6,6 +6,8 @@
 #
 # Build Tool
 #
+
+# shellcheck disable=SC1091
 source "/acrossfw/vpnet-functions.sh"
 vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
@@ -68,7 +70,7 @@ builder::build() {
     echo
     echo
     echo
-    return -1
+    return 1
   }
 
   echo
@@ -102,7 +104,7 @@ CMD
 
   $docker_run || {
     echo "ERROR: docker run fail with error code $?"
-    return -1
+    return 1
   }
 
   return 0
@@ -122,7 +124,7 @@ builder::exec() {
 
   $docker_exec || {
     echo "ERROR: docker exec fail: $?"
-    return -1
+    return 1
   }
   return 0
 }
@@ -138,7 +140,7 @@ builder::test() {
 
   $docker_run_cmd || {
     echo "ERROR: docker run test fail with error code $?"
-    return -1
+    return 1
   }
 
   return 0
@@ -171,7 +173,7 @@ builder::ssh() {
 
   $ssh_cmd || {
     echo "ERROR: exec ssh fail with error code $?"
-    return -1
+    return 1
   }
   return 0
 }

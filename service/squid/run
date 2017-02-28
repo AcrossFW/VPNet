@@ -6,22 +6,24 @@
 #
 # squid
 #
+
+# shellcheck disable=SC1090
 source "$ACROSSFW_HOME/vpnet-functions.sh"
 vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
 main() {
   # [ -d /etc/squid ] || mkdir /etc/squid
-  
-  # 
+
+  #
   # template vars
   # this var used both in init_user & init_config
   SQUID_PASSWD=/etc/squid/htpasswd
-  
+
   vpnet::init_config /etc/squid/squid.conf
   squid::init_user
-  
+
   squid::exec
-  
+
   err_code=$?
   echo "ERROR: exec squid exit code $err_code"
   sleep 1
@@ -34,7 +36,7 @@ squid::init_user() {
 
 squid::exec() {
   [ -e /var/spool/squid/00 ] || squid -Nz
-  
+
   ulimit -n 65535
   exec squid -N -d 1 -YC
 }
