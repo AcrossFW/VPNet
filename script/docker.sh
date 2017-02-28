@@ -8,7 +8,7 @@
 #
 
 # shellcheck disable=SC1091
-source "/acrossfw/vpnet-functions.sh"
+source "vpnet-functions.sh"
 vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
 main() {
