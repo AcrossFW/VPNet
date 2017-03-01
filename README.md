@@ -10,10 +10,10 @@ We believe that the right of visiting free and open global internet is right tha
 
 **U.S. Consulate request quotation for International Internet access service on Aug 2016.**
 
-> U.S. Consulate General Shanghai  
-> Date: Aug 10, 2016  
-> To: Prospective Bidders  
-> Subject: Request for Quotation for Internet access solution  
+> U.S. Consulate General Shanghai
+> Date: Aug 10, 2016
+> To: Prospective Bidders
+> Subject: Request for Quotation for Internet access solution
 
 ![U.S. Consulate Quotation](https://raw.githubusercontent.com/AcrossFW/vpnet/master/image/internet-access-solution-quotation-from-us-consulate-shanghai.jpg)
 
@@ -34,16 +34,16 @@ The Goal of VPNet is to satisfy those needs in above story, with the following h
     1. Build, Ship, Run with Docker
     2. Compatible with any modern Cloud Hosting Provider(VPS)
     3. One Command for All
-1. Professional  
+1. Professional
     1. Stable Connection
     2. Strong Encryption
     3. Decentralized
 
 Being an Anti-Censorship Technology, VPNet has to try the best to adapt.
 
-> “Every time censors try a new technique, the tool developers adapt, keeping thousand of users connected to the global internet.”  
->  
->   Malinowski, _Assistant Secretary of State for Democracy, Human Rights and Labor_  
+> “Every time censors try a new technique, the tool developers adapt, keeping thousand of users connected to the global internet.”
+>
+>   Malinowski, _Assistant Secretary of State for Democracy, Human Rights and Labor_
 
 ## Quick Start
 
@@ -67,11 +67,12 @@ Enjoy!
 
 > Sort by standard port number
 
-| Service | Standard Port | VPNet Port | ENV Variables |
-|   ---   |      ---      |     ---    |      ---      |
-|   SSH   |      22       |   10022    |               |
-|   PPTP  |      1723     |    1723    |               |
-| ShadowSocks |  8388     |   18388    |               |
+|  Service    | Standard Port | VPNet Port |  ENV Variables   |
+|    ---      |      ---      |    ---     |       ---        |
+|   SSH       |      22       |    10022   | PORT_SSH         |
+|   KcpTun    |      554      |    10554   | PORT_KCPTUN      |
+|   PPTP      |      1723     |    1723    |                  |
+| ShadowSocks |      8388     |    18388   | PORT_SHADOWSOCKS |
 
 _About Port Number: some added 10000 to prevent conflict with host(ONE for all)_
 
@@ -79,25 +80,29 @@ _About Port Number: some added 10000 to prevent conflict with host(ONE for all)_
 
 TCP: 22
 
-### 2. PPTP
+### 2. KcpTun
 
-TCP: 1723  
+UDP: 554
+
+### 3. PPTP
+
+TCP: 1723
 IP: GRE
 
-### 3. Squid
+### 4. Squid
 
 TCP: 3128
 
-### 4. ShadowSocks
+### 5. ShadowSocks
 
 TCP: 8388
 
-### 5. IKEv2/IPsec
+### 6. IKEv2/IPsec
 
 
-### 6. OpenVPN
+### 7. OpenVPN
 
-### 7. SSTP
+### 8. SSTP
 
 ## Cloud Hosting
 
@@ -144,6 +149,31 @@ Leak of some function
 
 ## Docker Installation
 
+### [Ubuntu](https://docs.docker.com/engine/installation/linux/ubuntu/)
+
+```shell
+$ sudo apt-get install -y --no-install-recommends \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+
+$ curl -fsSL https://apt.dockerproject.org/gpg | sudo apt-key add -
+
+$ sudo add-apt-repository \
+       "deb https://apt.dockerproject.org/repo/ \
+       ubuntu-$(lsb_release -cs) \
+       main"
+
+$ sudo apt-get update
+$ sudo apt-get -y install docker-engine
+
+$ docker run hello-world
+
+```
+
+### [Debian](https://docs.docker.com/engine/installation/linux/debian/)
+
 Here's how to install docker in 64-bit Debian 8.
 
 ```shell
@@ -175,7 +205,7 @@ Linting with [ShellCheck](https://github.com/koalaman/shellcheck)
 * [Best Practices for Writing Bash Script](http://kvz.io/blog/2013/11/21/bash-best-practices/)
 * [progrium/bashstyle](https://github.com/progrium/bashstyle)
 * [Returning Values from Bash Functions](http://www.linuxjournal.com/content/return-values-bash-functions)
-* 
+*
 ## See Also
 
 1. [Internet Freedom](www.state.gov/e/eb/cip/netfreedom/index.htm) - Our goal is to ensure that any child, born anywhere in the world, has access to the global Internet as an open platform on which to innovate, learn, organize, and express herself free from undue interference or censorship.

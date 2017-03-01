@@ -29,8 +29,10 @@ RUN apt-get update -qq && apt-get -qqy install \
     	inetutils-traceroute \
     	iperf \
     	iptables \
+    	jq \
     	lsof \
     	lua5.1 \
+    	man \
     	net-tools \
     	netcat \
     	nload \
@@ -38,6 +40,8 @@ RUN apt-get update -qq && apt-get -qqy install \
     	shellcheck \
     	tcpdump \
     	tinc \
+    	vim \
+    	wget \
       \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -207,10 +211,16 @@ RUN apt-get update -qq && apt-get install -qqy \
 
 #
 # START KCPTUN
-# TBD
-
-# inspired by vimagick/kcptun
 #
+ENV PORT_KCPTUN 10554
+EXPOSE ${PORT_KCPTUN}/udp
+
+RUN URL=$(curl -s https://api.github.com/repos/xtaci/kcptun/releases/latest | jq -r '.assets[] | select(.name | contains("linux-amd64")) .browser_download_url') \
+      && wget --quiet -O /tmp/kcptun.tgz "$URL" \
+      && [ -e "${ACROSSFW_HOME}/service/kcptun/bin/" ] || mkdir -p ${ACROSSFW_HOME}/service/kcptun/bin/ \
+      && tar zxvf /tmp/kcptun.tgz -C ${ACROSSFW_HOME}/service/kcptun/bin/ \
+      && ln -s ${ACROSSFW_HOME}/service/kcptun /service/kcptun \
+      && rm -f /tmp/kcptun.tgz
 
 #
 # END KCPTUN

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#
+# VPNet.io - Virtual Private Network Essential Toolbox
+#
+# https://github.com/acrossfw/vpnet
+#
+# inspired by https://hub.docker.com/r/vimagick/shadowsocks-libev/
+#
+# KcpTun
+#
+
+# shellcheck disable=SC1090
+source "$ACROSSFW_HOME/vpnet-functions.sh"
+vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
+
+main() {
+  kcptunCmd='./bin/server_linux_amd64'
+
+  # shellcheck disable=SC2093
+  exec $kcptunCmd \
+        --key "${ADMIN_PASS:-vpnet.io}" \
+        -t 127.0.0.1:"${PORT_SHADOWSOCKS:-18388}" \
+	      -l 0.0.0.0:"${PORT_KCPTUN:-10554}" \
+        --crypt aes \
+        --mtu 1350 \
+        --mode fast \
+        --sndwnd 1024 \
+        --rcvwnd 1024
+
+  echo "ERROR: exec kcptun exited with error code $?"
+  sleep 1
+  exit 1
+}
+
+main "$@"
