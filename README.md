@@ -159,8 +159,8 @@ If you want to install docker for other linux distribution, documents can be fou
 
 ## Todo
 
-* Support KcpTun:
-  - url=$(curl -s https://api.github.com/repos/xtaci/kcptun/releases/latest | jq -r '.assets[] | select(.name | contains("linux-amd64")) .browser_download_url')
+* [ ] [Support KcpTun](http://www.jianshu.com/p/78420fad1481):
+  - `url=$(curl -s https://api.github.com/repos/xtaci/kcptun/releases/latest | jq -r '.assets[] | select(.name | contains("linux-amd64")) .browser_download_url')`
 
 ## Coding Style
 
