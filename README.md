@@ -157,6 +157,11 @@ docker run hello-world
 
 If you want to install docker for other linux distribution, documents can be found on docker.com at [Install Docker Engine](https://docs.docker.com/engine/installation/#installation).
 
+## Todo
+
+* Support KcpTun:
+  - url=$(curl -s https://api.github.com/repos/xtaci/kcptun/releases/latest | jq -r '.assets[] | select(.name | contains("linux-amd64")) .browser_download_url')
+
 ## Coding Style
 
 Linting with [ShellCheck](https://github.com/koalaman/shellcheck)
