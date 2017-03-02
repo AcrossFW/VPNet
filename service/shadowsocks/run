@@ -15,22 +15,20 @@ vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
 main() {
   # shadowsocks-libev
-  # ss_cmd=ss-server
+  ss_cmd=ss-server
 
   # shadowsocks (installed by apt-get install shadowsocks)
-  ss_cmd=ssserver
+  # ss_cmd=ssserver
 
   # shellcheck disable=SC2093
   exec $ss_cmd -s 0.0.0.0 \
   	-p "${PORT_SHADOWSOCKS:-8388}" \
   	-k "${ADMIN_PASS:-vpnet.io}" \
-  	-m "${SHADOWSOCKS_ENCRYPT_METHOD:-aes-256-cfb}" \
+  	-m "${SHADOWSOCKS_ENCRYPT_METHOD:-salsa20}" \
+  	-d "${DNS:-8.8.8.8}" \
   	-t 300 \
-  	--fast-open
-
-  	# the following parameters is only worked for shadowsocks-libev
-  	# -d "${DNS:-8.8.8.8}" \
-  	# -u
+  	--fast-open \
+  	-u
 
   echo "ERROR: exec shadowsocks exited with error code $?"
   sleep 1

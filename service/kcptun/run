@@ -18,10 +18,10 @@ main() {
 
   # shellcheck disable=SC2093
   exec $kcptunCmd \
+        -t 127.0.0.1:"${PORT_SHADOWSOCKS:-8388}" \
+        -l 0.0.0.0:"${PORT_KCPTUN:-554}" \
+        --crypt "${KCPTUN_CRYPT:-salsa20}" \
         --key "${ADMIN_PASS:-vpnet.io}" \
-        -t 127.0.0.1:"${PORT_SHADOWSOCKS:-18388}" \
-	      -l 0.0.0.0:"${PORT_KCPTUN:-10554}" \
-        --crypt aes \
         --mtu 1350 \
         --mode fast \
         --sndwnd 1024 \
