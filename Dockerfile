@@ -192,18 +192,14 @@ RUN apt-get update -qq && apt-get install -qqy \
 ENV PORT_SHADOWSOCKS 18388
 EXPOSE ${PORT_SHADOWSOCKS}/tcp ${PORT_SHADOWSOCKS}/udp
 
-ENV SHADOWSOCKS_ENCRYPT_METHOD aes-256-cfb
+ENV SHADOWSOCKS_ENCRYPT_METHOD salsa20
 
-# inspired by https://hub.docker.com/r/vimagick/shadowsocks-libev/
-#
-
-#curl -s http://shadowsocks.org/debian/1D27208A.gpg | apt-key add - \
-#	  && echo "deb http://shadowsocks.org/debian wheezy main" > /etc/apt/sources.list.d/shadowsocks.list \
-RUN apt-get update -qq && apt-get install -qqy \
-      shadowsocks \
-    && ln -s ${ACROSSFW_HOME}/service/shadowsocks /service/shadowsocks \
-    \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN echo 'deb http://archive.ubuntu.com/ubuntu yakkety main universe' > /etc/apt/sources.list \
+      && apt-get update -qq \
+      && apt-get install -qqy shadowsocks-libev \
+      && ln -s ${ACROSSFW_HOME}/service/shadowsocks /service/shadowsocks \
+      \
+      && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 #
 # END SHADOWSOCKS
@@ -214,6 +210,8 @@ RUN apt-get update -qq && apt-get install -qqy \
 #
 ENV PORT_KCPTUN 10554
 EXPOSE ${PORT_KCPTUN}/udp
+
+ENV KCPTUN_CRYPT salsa20
 
 RUN URL=$(curl -s https://api.github.com/repos/xtaci/kcptun/releases/latest | jq -r '.assets[] | select(.name | contains("linux-amd64")) .browser_download_url') \
       && wget --quiet -O /tmp/kcptun.tgz "$URL" \
