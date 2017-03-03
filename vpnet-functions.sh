@@ -130,11 +130,15 @@ vpnet::init_system() {
 
 vpnet::init_network() {
   echo "Setting ip forwarding to 1 ..."
-  sysctl net.ipv4.ip_forward=1            || echo "WARN: sysctl fail"
-  sysctl net.ipv4.conf.all.forwarding=1   || echo "WARN: sysctl fail"
-  sysctl net.ipv6.conf.all.forwarding=1   || echo "WARN: sysctl fail"
-  sysctl net.ipv6.conf.all.proxy_ndp=1    || echo "WARN: sysctl fail"
-  echo 1 > /proc/sys/net/ipv4/route/flush || echo "WARN: sysctl fail"
+  sysctl net.ipv4.ip_forward=1            || echo "WARN: sysctl ip_forward fail"
+  sysctl net.ipv4.conf.all.forwarding=1   || echo "WARN: sysctl ipv4 forwarding fail"
+  sysctl net.ipv6.conf.all.forwarding=1   || echo "WARN: sysctl ipv6 forwarding fail"
+  sysctl net.ipv6.conf.all.proxy_ndp=1    || echo "WARN: sysctl proxy_ndp fail"
+  echo 1 > /proc/sys/net/ipv4/route/flush || echo "WARN: sysctl ipv4 flush fail"
+
+  echo "Enabling Google BBR for TCP ..."
+  sysctl net.core.default_qdisc=fq            || echo "WARN: sysctl default_qdisc fail"
+  sysctl net.ipv4.tcp_congestion_control=bbr  || echo "WARN: sysctl tcp_congestion_control fail"
 
   # XXX does there always be `eth0` in docker ???
   echo "Setting network filter ..."

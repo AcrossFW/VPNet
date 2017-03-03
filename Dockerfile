@@ -38,6 +38,7 @@ RUN apt-get update -qq && apt-get -qqy install \
     	nload \
     	screen \
     	shellcheck \
+    	speedtest-cli \
     	tcpdump \
     	tinc \
     	vim \
