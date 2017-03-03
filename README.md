@@ -50,7 +50,12 @@ Being an Anti-Censorship Technology, VPNet has to try the best to adapt.
 VPNet is extreme easy to deploy by only one command, because it was built & shiped by docker:
 
 ```shell
-docker run -d --privileged --net=host acrossfw/vpnet
+docker run -d \
+  --privileged \
+  --net=host \
+  --restart=always \
+  --name=vpnet \
+  acrossfw/vpnet
 ```
 
 You are set. Cheers!
@@ -189,8 +194,9 @@ If you want to install docker for other linux distribution, documents can be fou
 
 ## Todo
 
-* [ ] [Support KcpTun](http://www.jianshu.com/p/78420fad1481):
-  - `url=$(curl -s https://api.github.com/repos/xtaci/kcptun/releases/latest | jq -r '.assets[] | select(.name | contains("linux-amd64")) .browser_download_url')`
+* [x] [Support KcpTun](http://www.jianshu.com/p/78420fad1481):
+* [x] [Enable TCP BBR](https://github.com/iMeiji/shadowsocks_install/wiki/%E5%BC%80%E5%90%AFTCP-BBR%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95)
+* [ ] [Setup Tinc](https://silvenga.com/deploy-a-tinc-mesh-vpn-running-tap/)
 
 ## Coding Style
 
