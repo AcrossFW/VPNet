@@ -72,12 +72,12 @@ Enjoy!
 
 > Sort by standard port number
 
-|  Service    | Standard Port | VPNet Port |  ENV Variables   |
-|    ---      |      ---      |    ---     |       ---        |
-|   SSH       |      22       |    10022   | PORT_SSH         |
-|   KcpTun    |      554      |    10554   | PORT_KCPTUN      |
-|   PPTP      |      1723     |    1723    |                  |
-| ShadowSocks |      8388     |    18388   | PORT_SHADOWSOCKS |
+|  Service    | Standard Port | VPNet Port |
+|    ---      |      ---      |    ---     |
+|   SSH       |      22       |    10022   |
+|   KcpTun    |      554      |    10554   |
+|   PPTP      |      1723     |    1723    |
+| ShadowSocks |      8388     |    18388   |
 
 _About Port Number: some added 10000 to prevent conflict with host(ONE for all)_
 
@@ -85,9 +85,17 @@ _About Port Number: some added 10000 to prevent conflict with host(ONE for all)_
 
 TCP: 22
 
+| SSH Env Variable | Default Value |
+|       ---        |      ---      |
+|     PORT_SSH     |     10022     |
+
 ### 2. KcpTun
 
 UDP: 554
+
+| KcpTun Env Variable | Default Value |
+|         ---         |      ---      |
+|     PORT_KCPTUN     |     10554     |
 
 ### 3. PPTP
 
@@ -98,9 +106,18 @@ IP: GRE
 
 TCP: 3128
 
+| Squid Env Variable | Default Value |
+|       ---          |      ---      |
+|     PORT_SQUID     |     13128     |
+
 ### 5. ShadowSocks
 
 TCP: 8388
+
+| ShadowSocks Env Variable | Default Value |
+|           ---            |      ---      |
+|         PORT_SSH         |     18388     |
+
 
 ### 6. IKEv2/IPsec
 
@@ -126,6 +143,7 @@ The follow requirements is just for suggestion, because VPNet can run in anywher
 Tested without any Problem, with best price
 
 1. [DigitalOcean](https://m.do.co/c/9304d9484557) $5/mo, new register user will get $10 free credit
+  - [Update kernel >= 4.9 to support TCP BBR](https://www.40huo.cn/blog/digitalocean-vps-turns-on-bbr.html)
 1. [Linode](https://www.linode.com/?r=564ab299ba1b198e0eb12fe0a50d559accaa2300) $10/mo, Tokyo Japan & Singapore, with [$20 COUPON](https://www.google.com/#q=linode+promotion+code+coupon)
 1. [Vultr](http://www.vultr.com/?ref=6981349) $5/mo, Tokyo Japan, with [$100 COUPON](http://vultrcouponcode.com/)
 
