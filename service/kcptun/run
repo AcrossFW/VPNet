@@ -23,14 +23,22 @@ main() {
   #   --nocomp	    压缩数据
   #   --parityshard	前向纠错
 
+  # server_linux_amd64 does not accept `--nocomp 1` params, which will cause it parse arguments totally wrong.
+  # if we set KCPTUN_NOCOMP=0/"", we just not put any args(as default)
+  # if we set KCPTUN_NOCOMP=1/Y, we just set args to '--nocomp'
+  NOCOMP=""
+  if [[ -n "$KCPTUN_NOCOMP" && "$KCPTUN_NOCOMP" != 0 ]]; then
+    NOCOMP="--nocomp"
+  fi
+
   # shellcheck disable=SC2093
   exec $kcptunCmd \
         --crypt       "${KCPTUN_CRYPT:-salsa20}" \
         --datashard   "${KCPTUN_DATASHARD:-10}" \
         --key         "${ADMIN_PASS:-vpnet.io}" \
         --mode        "${KCPTUN_MODE:-fast}" \
-        --nocomp      "${KCPTUN_NOCOMP:-0}"\
         --parityshard "${KCPTUN_PARITYSHARD:-3}" \
+        "${NOCOMP}" \
         \
         --dscp        "${KCPTUN_DSCP:-0}" \
         --listen      "0.0.0.0:${PORT_KCPTUN:-554}" \
