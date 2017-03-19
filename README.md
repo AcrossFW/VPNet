@@ -1,10 +1,11 @@
-# VPNet
+# VPNet [![CircleCI](https://circleci.com/gh/AcrossFW/VPNet.svg?style=svg)](https://circleci.com/gh/AcrossFW/VPNet) [![](https://images.microbadger.com/badges/image/acrossfw/vpnet.svg)](https://microbadger.com/images/acrossfw/vpnet "Get your own image badge on microbadger.com")
+
+[![dockeri.co](http://dockeri.co/image/acrossfw/vpnet)](https://hub.docker.com/r/acrossfw/vpnet/)
 
 VPNet(Very Powerful Network Encryption Toolbox) is a modern, open source, strong encryption and easy to use docker image for bypassing the censorship circumvention systems, which helps people gain access to the global internet free of censorship, without knowledge of what is being blocked or the underlying technical.
 
 We believe that the right of visiting free and open global internet is right that all people should enjoy – both technic and the non-technic people.
 
-[![](https://images.microbadger.com/badges/image/acrossfw/vpnet.svg)](https://microbadger.com/images/acrossfw/vpnet "Get your own image badge on microbadger.com")
 
 ## Story
 
