@@ -14,18 +14,30 @@ source "$ACROSSFW_HOME/vpnet-functions.sh"
 vpnet::init_bash "${BASH_SOURCE[0]}" # set all the magic
 
 main() {
-  kcptunCmd='./bin/server_linux_amd64'
+  kcptunCmd='./bin/server_linux_amd64' # installed by `docker build`
+
+  # 服务端与客户端必须一致的5个参数及含义 - https://lvii.gitbooks.io/outman/content/kcptun.html
+  #   --crypt	      加密算法
+  #   --datashard	  前向纠错
+  #   --key	        密钥
+  #   --nocomp	    压缩数据
+  #   --parityshard	前向纠错
 
   # shellcheck disable=SC2093
   exec $kcptunCmd \
-        -t 127.0.0.1:"${PORT_SHADOWSOCKS:-8388}" \
-        -l 0.0.0.0:"${PORT_KCPTUN:-554}" \
-        --crypt "${KCPTUN_CRYPT:-salsa20}" \
-        --key "${ADMIN_PASS:-vpnet.io}" \
-        --mtu 1350 \
-        --mode fast \
-        --sndwnd 1024 \
-        --rcvwnd 1024
+        --crypt       "${KCPTUN_CRYPT:-salsa20}" \
+        --datashard   "${KCPTUN_DATASHARD:-10}" \
+        --key         "${ADMIN_PASS:-vpnet.io}" \
+        --mode        "${KCPTUN_MODE:-fast}" \
+        --nocomp      "${KCPTUN_NOCOMP:-0}"\
+        --parityshard "${KCPTUN_PARITYSHARD:-3}" \
+        \
+        --dscp        "${KCPTUN_DSCP:-0}" \
+        --listen      "0.0.0.0:${PORT_KCPTUN:-554}" \
+        --mtu         "${KCPTUN_MTU:-1350}" \
+        --rcvwnd      "${KCPTUN_RCVWND:-1024}" \
+        --sndwnd      "${KCPTUN_SNDWND:-1024}" \
+        --target      "127.0.0.1:${PORT_SHADOWSOCKS:-8388}" \
 
   echo "ERROR: exec kcptun exited with error code $?"
   sleep 1

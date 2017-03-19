@@ -99,7 +99,7 @@ RUN cd service/vpnet \
 #
 
 #
-# START SSH
+# 22: START SSH
 #
 
 # to prevent conflict with host ssh standard port when run in --net=host mode
@@ -120,7 +120,7 @@ ENV SSH_AUTHORIZED_KEYS "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6GRsnNc1judMmIFe
 #
 
 #
-# START IPSEC
+# 500: START IPSEC
 #
 
 # Inspired by https://github.com/gaomd/docker-ikev2-vpn-server/blob/master/Dockerfile
@@ -144,7 +144,7 @@ EXPOSE 500/udp 4500/udp
 #
 
 #
-# START PPTP
+# 1723: START PPTP
 #
 
 # PPTP Port must be standard(should not change?)
@@ -169,7 +169,7 @@ RUN apt-get update -qq && apt-get install -qqy \
 #
 
 #
-# START SQUID
+# 3128: START SQUID
 #
 ENV PORT_SQUID 13128
 EXPOSE ${PORT_SQUID}/tcp
@@ -186,7 +186,7 @@ RUN apt-get update -qq && apt-get install -qqy \
 #
 
 #
-# START SHADOWSOCKS
+# 8388: START SHADOWSOCKS
 #
 
 # do not use the standard port
@@ -207,12 +207,22 @@ RUN echo 'deb http://archive.ubuntu.com/ubuntu yakkety main universe' > /etc/apt
 #
 
 #
-# START KCPTUN
+# 554: START KCPTUN
 #
 ENV PORT_KCPTUN 10554
 EXPOSE ${PORT_KCPTUN}/udp
 
+# Non-Defaults
 ENV KCPTUN_CRYPT salsa20
+ENV KCPTUN_DATASHARD 0
+ENV KCPTUN_PARITYSHARD 0
+
+# Defaults
+ENV KCPTUN_MODE fast
+ENV KCPTUN_MTU 1350
+ENV KCPTUN_NOCOMP 1
+ENV KCPTUN_RCVWND 1024
+ENV KCPTUN_SNDWND 1024
 
 RUN URL=$(curl -s https://api.github.com/repos/xtaci/kcptun/releases/latest | jq -r '.assets[] | select(.name | contains("linux-amd64")) .browser_download_url') \
       && wget --quiet -O /tmp/kcptun.tgz "$URL" \
@@ -226,7 +236,7 @@ RUN URL=$(curl -s https://api.github.com/repos/xtaci/kcptun/releases/latest | jq
 #
 
 #
-# START OPENVPN
+# 1194: START OPENVPN
 # TBD
 
 # do not use the standard port
@@ -239,11 +249,13 @@ EXPOSE ${PORT_OPENVPN}/tcp ${PORT_OPENVPN}/udp
 # END OPENVPN
 #
 
+
 #
 # TODO:
 #   L2TP
 #   Tinc
 #   Avahi
+#   OpenConnect VPN Server - https://lvii.gitbooks.io/outman/content/ocserv.html
 #
 
 #
