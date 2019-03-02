@@ -61,13 +61,31 @@ docker run -d \
 
 You are set. Cheers!
 
-### Defaults
+### Default Username and Password
 
-* user: vpnet
-* pass: vpnet.io
+* Username: vpnet
+* Password: vpnet.io
 
 Enjoy!
 
+### Custom Configuration
+
+You can change the default configuration by passing the environment variables when start/restart the docker container.
+
+For example, if you want to specify the shadowsocks port, you can set `PORT_SHADOWSOCKS` environment when restarting the docker container:
+
+```shell
+export PORT_SHADOWSOCKS=8388
+docker stop $(docker ps -a --filter name=vpnet -q)
+docker rm $(docker ps -a --filter name=vpnet -q)
+docker run -d \
+  --privileged \
+  --net=host \
+  --restart=always \
+  --name=vpnet \
+  -e PORT_SHADOWSOCKS=${PORT_SHADOWSOCKS} \
+  acrossfw/vpnet
+```
 
 ## Out-of-the-box Features
 
@@ -84,7 +102,7 @@ _About Port Number: some added 10000 to prevent conflict with host(ONE for all)_
 
 ### 1. SSH
 
-TCP: 22
+Standard port: 22/tcp
 
 | SSH Env Variable | Default Value |
 |       ---        |      ---      |
@@ -92,7 +110,7 @@ TCP: 22
 
 ### 2. KcpTun
 
-UDP: 554
+Standard port: 554/udp
 
 | KcpTun Env Variable | Default Value |
 |         ---         |      ---      |
@@ -100,12 +118,11 @@ UDP: 554
 
 ### 3. PPTP
 
-TCP: 1723
-IP: GRE
+Standard port: 1723/tcp gre/ip
 
 ### 4. Squid
 
-TCP: 3128
+Standard port: 3128/tcp
 
 | Squid Env Variable | Default Value |
 |       ---          |      ---      |
@@ -113,12 +130,12 @@ TCP: 3128
 
 ### 5. ShadowSocks
 
-TCP: 8388
+Standard port: 8388/tcp
 
-| ShadowSocks Env Variable | Default Value |
-|           ---            |      ---      |
-|         PORT_SSH         |     18388     |
-
+|  ShadowSocks Env Variable  | Default Value |
+|            ---             |      ---      |
+|      PORT_SHADOWSOCKS      |     18388     |
+| SHADOWSOCKS_ENCRYPT_METHOD |    salsa20    |
 
 ### 6. IKEv2/IPsec
 
@@ -176,40 +193,14 @@ Leak of some function
 ### [Ubuntu](https://docs.docker.com/engine/installation/linux/ubuntu/)
 
 ```shell
-$ sudo apt-get install -y --no-install-recommends \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    software-properties-common
-
-$ curl -fsSL https://apt.dockerproject.org/gpg | sudo apt-key add -
-
-$ sudo add-apt-repository \
-       "deb https://apt.dockerproject.org/repo/ \
-       ubuntu-$(lsb_release -cs) \
-       main"
-
-$ sudo apt-get update
-$ sudo apt-get -y install docker-engine
-
-$ docker run hello-world
-
+$ sudo apt update
+$ sudo apt install -y docker.io
+$ sudo docker run hello-world
 ```
 
-### [Debian](https://docs.docker.com/engine/installation/linux/debian/)
+### Other Operation Systems
 
-Here's how to install docker in 64-bit Debian 8.
-
-```shell
-apt-get update && apt-get install apt-transport-https
-apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
-apt-get update && apt-get install docker-engine
-service enable docker
-docker run hello-world
-```
-
-If you want to install docker for other linux distribution, documents can be found on docker.com at [Install Docker Engine](https://docs.docker.com/engine/installation/#installation).
+Please refer to the Docker document: <https://docs.docker.com/install/>
 
 ## Todo
 
